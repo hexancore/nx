@@ -3,7 +3,7 @@ env:
   HUSKY: 0
 on:
   pull_request:
-    branches: [ master, main ]
+    branches: [main]
 
 jobs:
   check:
@@ -15,6 +15,3 @@ jobs:
         uses: ./.github/actions/install
       - name: Test
         run: pnpm run ci
-
-
-

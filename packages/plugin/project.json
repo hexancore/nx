@@ -27,6 +27,16 @@
             "output": "./src"
           },
           {
+            "input": "{workspaceRoot}",
+            "glob": "LICENSE",
+            "output": "."
+          },
+          {
+            "input": "{workspaceRoot}",
+            "glob": "CHANGELOG.md",
+            "output": "."
+          },
+          {
             "input": "{projectRoot}/src",
             "glob": "**/*.d.ts",
             "output": "./src"
@@ -53,7 +63,7 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
-        
+
         "lintFilePatterns": [
           "{projectRoot}/**/*.ts",
           "{projectRoot}/package.json"

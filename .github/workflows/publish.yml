@@ -23,6 +23,7 @@ jobs:
       - name: Publish
         shell: bash
         run: |
+          cd ./dist/packages/plugin
           npm publish --provenance --access public --tag latest
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
