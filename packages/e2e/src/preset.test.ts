@@ -7,7 +7,7 @@ describe('Plugin', () => {
 
   it('should be installed', () => {
     projectDirectory = createTestProject();
-    execSync('npm ls @hexancore/nx', {
+    execSync('pnpm ls @hexancore/nx', {
       cwd: projectDirectory,
       stdio: 'inherit',
     });
