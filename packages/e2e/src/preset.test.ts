@@ -38,7 +38,7 @@ function createTestProject(extraArgs = '') {
 
   const createWorkspaceScript = join(process.cwd(), 'tools', 'scripts', 'create-workspace.ts');
   try {
-    execSync(`tsx ${createWorkspaceScript} ${projectName} ${extraArgs}`, {
+    execSync(`pnpm tsx ${createWorkspaceScript} ${projectName} ${extraArgs}`, {
       cwd: dirname(projectDirectory),
       stdio: 'inherit',
       env: process.env,
