@@ -27,7 +27,7 @@
             "output": "./src"
           },
           {
-            "input": "{workspaceRoot}/README.md",
+            "input": "{workspaceRoot}",
             "glob": "README.md",
             "output": "."
           },
