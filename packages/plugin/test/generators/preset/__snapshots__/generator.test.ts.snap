@@ -1,0 +1,299 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`preset generator .env should match snapshot 1`] = `
+"PROJECT=test-workspace
+TZ=Etc/UTC
+APP_HOME=./
+"
+`;
+
+exports[`preset generator .env.development should match snapshot 1`] = `
+"APP_ENV=dev
+NODE_TLS_REJECT_UNAUTHORIZED=0
+#DEBUG=ioredis:*
+"
+`;
+
+exports[`preset generator .env.test should match snapshot 1`] = `
+"APP_ENV=test
+NODE_TLS_REJECT_UNAUTHORIZED=0"
+`;
+
+exports[`preset generator .npmrc should match snapshot 1`] = `
+"ignore-workspace-root-check=true
+strict-peer-dependencies=false
+auto-install-peers=true
+"
+`;
+
+exports[`preset generator CONTRIBUTING.md should match snapshot 1`] = `
+"# Contributing to test-workspace
+
+First off, thanks for taking the time to contribute! 🎉
+
+The following is a set of guidelines for contributing to test-workspace. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
+
+
+## How Can I Contribute?
+
+### Reporting Bugs
+
+This section guides you through submitting a bug report for test-workspace. Following these guidelines helps maintainers understand your report, reproduce the behavior, and find related reports.
+
+- **Ensure the bug was not already reported** by searching on [PLACEHOLDER]
+- If you're unable to find an open issue addressing the problem, open a new one. Be sure to include:
+  - A clear and descriptive title.
+  - A detailed description of the bug.
+  - Steps to reproduce the bug.
+  - Expected and actual results.
+  - Screenshots or code samples, if applicable.
+
+### Suggesting Enhancements
+
+This section guides you through submitting an enhancement suggestion for test-workspace, including completely new features and minor improvements to existing functionality.
+
+- **Ensure the enhancement was not already suggested** by searching on [PLACEHOLDER].
+- If you're unable to find an open issue addressing the idea, open a new one. Be sure to include:
+  - A clear and descriptive title.
+  - A detailed description of the enhancement.
+  - Any relevant screenshots or mockups.
+
+### Your First Code Contribution
+
+### Pull Requests
+
+The process described here will help you contribute to test-workspace. Please follow these steps to ensure your contribution is accepted:
+
+1. Fork the repository and create your branch from \`main\`.
+2. If you've added code that should be tested, add tests.
+3. If you've changed APIs, update the documentation.
+4. Ensure the test suite passes.
+5. Make sure your code lints.
+6. Issue that pull request!
+
+### Coding Style
+
+Please follow the coding standards used throughout the existing code base. Some general guidelines:
+
+- Use descriptive variable and function names.
+- Write comments where necessary for clarity.
+- Ensure your code passes all linting checks.
+
+## Style Guides
+
+### Git Commit Messages
+
+- Use the present tense ("Add feature" not "Added feature").
+- Use the imperative mood ("Move cursor to..." not "Moves cursor to...").
+- Limit the first line to 72 characters or less.
+- Reference issues and pull requests liberally.
+
+## Additional Notes
+
+### Issue and Pull Request Labels
+
+This section lists the labels we use to help us track and manage issues and pull requests.
+
+- \`bug\`: Something isn't working
+- \`enhancement\`: New feature or request
+- \`question\`: Further information is requested
+- \`documentation\`: Improvements or additions to documentation
+- \`help wanted\`: Extra attention is needed
+
+---
+
+Thank you for your contributions! Your help is greatly appreciated."
+`;
+
+exports[`preset generator README.md should match snapshot 1`] = `
+"# test-workspace
+
+Replace with Yours project workspace description.
+
+## Getting started
+
+To start contributing you need install some tools and init developer environment.
+
+### Tools
+ - NodeJS
+ - pnpm
+ - Nx (\`pnpm add --global nx@19.0.4\`)
+ - Docker + Compose
+ - make
+
+To init developer environment run:
+\`\`\`bash
+make init_devenv
+\`\`\`
+
+## Contributing
+
+Contributing Guide is in separate file [CONTRIBUTING.md](./CONTRIBUTING.md)"
+`;
+
+exports[`preset generator nx.json should match snapshot 1`] = `
+"{
+  "affected": {
+    "defaultBase": "main"
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "cache": true
+    },
+    "lint": {
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore"
+      ],
+      "cache": true
+    },
+    "test": {
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/jest.preset.js"
+      ],
+      "cache": true
+    },
+    "@nx/vite:test": {
+      "cache": true,
+      "inputs": [
+        "default",
+        "^default"
+      ]
+    },
+    "@nx/eslint:lint": {
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore"
+      ],
+      "cache": true
+    }
+  },
+  "extends": "nx/presets/npm.json",
+  "pluginsConfig": {
+    "@nx/js": {
+      "analyzeSourceFiles": true
+    }
+  },
+  "namedInputs": {
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
+    "production": [
+      "default",
+      "!{projectRoot}/jest.config.{js,ts,mjs,mts}",
+      "!{projectRoot}/vite.config.{js,ts,mjs,mts}",
+      "!{projectRoot}/.eslintrc.json"
+    ]
+  },
+  "generators": {
+    "@nx/workspace:move": {
+      "projectNameAndRootFormat": "as-provided"
+    }
+  },
+  "useInferencePlugins": false,
+  "defaultBase": "main",
+  "workspaceLayout": {
+    "appsDir": "apps",
+    "libsDir": "libs"
+  }
+}
+"
+`;
+
+exports[`preset generator package.json should match snapshot 1`] = `
+"{
+  "name": "@proj/source",
+  "dependencies": {
+    "@hexancore/auth": "0.3.*",
+    "@hexancore/cloud": "0.1.*",
+    "@hexancore/common": "0.13.*",
+    "@hexancore/core": "0.14.*",
+    "@hexancore/typeorm": "0.14.*",
+    "tslib": "2.6.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.4",
+    "@babel/plugin-transform-modules-commonjs": "^7.24.1",
+    "@babel/preset-env": "^7.24.4",
+    "@hexancore/mocker": "^1.1.2",
+    "@hexancore/nx": "0.1.*",
+    "@intlify/eslint-plugin-vue-i18n": "^2.0.0",
+    "@intlify/unplugin-vue-i18n": "^2.0.0",
+    "@jest/globals": "^29.7.0",
+    "@nestjs/testing": "^10.3.8",
+    "@nx/devkit": "19.0.4",
+    "@nx/esbuild": "19.0.4",
+    "@nx/eslint-plugin": "19.0.4",
+    "@nx/jest": "19.0.4",
+    "@nx/js": "19.0.4",
+    "@nx/linter": "19.0.4",
+    "@nx/plugin": "19.0.4",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@samatech/postcss-basics": "^0.6.0",
+    "@stylistic/eslint-plugin": "^2.1.0",
+    "@types/jest": "^29.5.12",
+    "@types/node": "20.12.12",
+    "@typescript-eslint/parser": "7.3.0",
+    "@vitejs/plugin-basic-ssl": "^1.1.0",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vitest/coverage-c8": "~0.32.4",
+    "@vitest/ui": "1.3.1",
+    "@vue/eslint-config-typescript": "^11.0.3",
+    "@vue/test-utils": "^2.4.5",
+    "@vue/tsconfig": "^0.4.0",
+    "autoprefixer": "^10.4.19",
+    "axios-mock-adapter": "^1.22.0",
+    "esbuild": "^0.19.12",
+    "eslint": "8.57.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-vue": "^9.25.0",
+    "happy-dom": "^9.20.3",
+    "jest": "^29.7.0",
+    "jest-docblock": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jest-environment-node": "^29.7.0",
+    "jest-expect-message": "^1.1.3",
+    "jest-runner": "^29.7.0",
+    "jest-runner-groups": "^2.2.0",
+    "jsdom": "~22.1.0",
+    "nx-vue3-vite": "^0.27.0",
+    "pinia": "^2.1.7",
+    "postcss": "^8.4.38",
+    "primeflex": "^3.3.1",
+    "primeicons": "^6.0.1",
+    "primevue": "^3.52.0",
+    "rollup": "^4.17.0",
+    "sass": "^1.75.0",
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard": "^33.0.0",
+    "ts-jest": "^29.1.2",
+    "tsconfig": "^7.0.0",
+    "typescript": "5.4.5",
+    "typescript-transform-paths": "^3.4.7",
+    "unplugin-swc": "^1.4.5",
+    "vee-validate": "^4.12.6",
+    "vite": "^5.2.10",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "1.3.1",
+    "vue": "^3.4.25",
+    "vue-eslint-parser": "^9.4.2",
+    "vue-i18n": "^9.13.1",
+    "vue-router": "^4.3.2",
+    "vue-tsc": "^1.8.27"
+  },
+  "license": "UNLICENSED",
+  "scripts": {
+    "precommit": "nx run-many --targets=lint,test,build,e2e",
+    "ci": "nx run-many --targets=lint,test,build,e2e --configuration=ci"
+  }
+}
+"
+`;

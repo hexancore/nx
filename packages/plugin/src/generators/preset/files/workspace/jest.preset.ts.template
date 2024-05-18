@@ -1,0 +1,28 @@
+import type { JestConfigWithTsJest } from 'ts-jest'
+import { pathsToModuleNameMapper } from 'ts-jest'
+import * as fs from 'fs';
+import * as path from 'path';
+
+function createJestConfig(projectDir: string): JestConfigWithTsJest {
+  const tsConfig = JSON.parse(fs.readFileSync(`${projectDir}/tsconfig.json`, 'utf-8'));
+  const jestConfig: JestConfigWithTsJest = {
+    extensionsToTreatAsEsm: ['.ts'],
+    displayName: path.basename(projectDir),
+    resolver: '@nx/jest/plugins/resolver',
+    transform: {
+      '^.+\\.m?[tj]sx?$': ['ts-jest', { tsconfig: `${projectDir}/tsconfig.test.json` }],
+    },
+    runner: "groups",
+    moduleFileExtensions: ["js", "json", "ts"],
+    moduleNameMapper: pathsToModuleNameMapper(tsConfig.compilerOptions.paths),
+    testMatch: ["<rootDir>/test/**/*.test.ts"],
+    setupFiles: [],
+    setupFilesAfterEnv: ["jest-expect-message", "<rootDir>/test/config.ts"],
+    coverageDirectory: "./test/coverage",
+    testEnvironment: "node",
+    transformIgnorePatterns: ["/node_modules/"]
+  }
+  return jestConfig;
+}
+
+export default createJestConfig;

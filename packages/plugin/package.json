@@ -1,0 +1,32 @@
+{
+  "name": "@hexancore/nx",
+  "version": "0.1.0",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "engine-strict": true,
+  "description": "Hexancore Nx integration plugin",
+  "homepage": "https://github.com/hexancore/nx",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
+  "generators": "./generators.json",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hexancore/nx.git",
+    "directory": "packages/plugin"
+  },
+  "author": {
+    "name": "Andrzej Wasiak",
+    "url": "https://andrzejwasiak.pl"
+  },
+  "dependencies": {
+    "@nx/devkit": "19.0.4",
+    "tslib": "^2.6.2"
+  },
+  "files": [
+    "src",
+    "generators.json"
+  ]
+}

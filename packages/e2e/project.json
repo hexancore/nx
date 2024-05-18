@@ -1,0 +1,27 @@
+{
+  "name": "e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "{projectRoot}/src",
+  "implicitDependencies": ["plugin"],
+  "targets": {
+    "e2e": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.ts",
+        "runInBand": true
+      },
+      "dependsOn": ["^build"]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "lint-fix": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "fix": true
+      }
+    }
+  }
+}

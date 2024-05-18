@@ -1,0 +1,20 @@
+name: Pull Request
+env:
+  HUSKY: 0
+on:
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # 4.1.6
+      - name: Install
+        uses: ./.github/actions/install
+      - name: Test
+        run: pnpm run ci
+
+
+

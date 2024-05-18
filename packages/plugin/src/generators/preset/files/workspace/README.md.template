@@ -1,0 +1,23 @@
+# <%= workspace.name %>
+
+Replace with Yours project workspace description.
+
+## Getting started
+
+To start contributing you need install some tools and init developer environment.
+
+### Tools
+ - NodeJS
+ - pnpm
+ - Nx (`pnpm add --global nx@<%= workspace.nxVersion %>`)
+ - Docker + Compose
+ - make
+
+To init developer environment run:
+```bash
+make init_devenv
+```
+
+## Contributing
+
+Contributing Guide is in separate file [CONTRIBUTING.md](./CONTRIBUTING.md)

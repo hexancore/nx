@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "nrwl.angular-console",
+    "Vue.volar",
+    "PeterSchmalfeldt.explorer-exclude"
+  ]
+}

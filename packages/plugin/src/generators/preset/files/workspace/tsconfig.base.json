@@ -1,0 +1,44 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "moduleResolution": "Node16",
+    "module": "Node16",
+    "target": "ES2022",
+    "lib": [
+      "ES2022"
+    ],
+    "sourceMap": true,
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noImplicitOverride": true,
+    "noImplicitAny": false,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "allowJs": true,
+    "baseUrl": ".",
+    "resolveJsonModule": true,
+    "plugins": [
+      // Transform paths in output .js files
+      {
+        "transform": "typescript-transform-paths"
+      },
+      // Transform paths in output .d.ts files (Include this line if you output declarations files)
+      {
+        "transform": "typescript-transform-paths",
+        "afterDeclarations": true
+      }
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "declaration": true,
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/generators/preset/generator.test.ts"
+, "src/generators/preset/files/workspace/jest.config.ts.template", "src/generators/preset/files/workspace/jest.preset.ts.template"  ],
+  "exclude": [
+    "jest.config.ts",
+    "test/**/*.test.ts"
+  ]
+}

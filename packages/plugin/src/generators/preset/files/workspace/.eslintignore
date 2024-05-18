@@ -1,0 +1,9 @@
+node_modules
+dist
+bin
+docker
+config
+.yalc
+.vscode
+.nx
+tmp
