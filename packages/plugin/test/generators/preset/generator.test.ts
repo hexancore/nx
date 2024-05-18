@@ -42,7 +42,9 @@ describe('preset generator', () => {
     '.editorconfig',
     '.dockerignore',
     '.vscode/extensions.json',
-    '.vscode/settings.json.template'
+    '.vscode/settings.json.template',
+    '.husky/install.mjs',
+    '.husky/pre-commit',
   ].map(i => [i]);
   test.each(expectedWorkspaceFilesToExists)('%s should exist', (filePath) => {
     expect(tree.exists(filePath)).toBeTruthy();

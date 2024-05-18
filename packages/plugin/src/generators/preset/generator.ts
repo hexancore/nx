@@ -28,7 +28,7 @@ export async function presetGenerator(
     }
   };
   generateFiles(tree, path.join(__dirname, 'files', 'workspace', '.vscode'), './.vscode', templateContext);
-  generateFiles(tree, path.join(__dirname, 'files', 'workspace', '.vscode'), './.husky', templateContext);
+  generateFiles(tree, path.join(__dirname, 'files', 'workspace', './.husky'), './.husky', templateContext);
   generateFiles(tree, path.join(__dirname, 'files', 'workspace'), './', templateContext);
 
   await formatFiles(tree);

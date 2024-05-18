@@ -5,7 +5,7 @@
   "scripts": {
     "prepare": "husky",
     "ci": "nx run-many --targets=lint,test,build,e2e --configuration=ci",
-    "precommit": "nx run-many --targets=lint,test,build,e2e"
+    "precommit": "nx run-many --targets=lint,test,build"
   },
   "private": true,
   "dependencies": {
