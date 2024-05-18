@@ -25,4 +25,4 @@ runs:
           ${{ runner.os }}-pnpm-store-
     - name: Install dependencies
       shell: bash
-      run: pnpm install --frozen-lockfile, --strict-peer-dependencies
+      run: pnpm install --frozen-lockfile --strict-peer-dependencies
