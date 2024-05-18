@@ -8,6 +8,7 @@ import { HcNxHelper } from '../../util/NxHelper';
 import { PresetNxJsonGenerator } from './helper/PresetNxJsonGenerator';
 import { PresetPackageJsonGenerator } from './helper/PresetPackageJsonGenerator';
 import { PresetGeneratorSchema } from './schema';
+import { readFileSync } from 'fs';
 
 export async function presetGenerator(
   tree: Tree,
@@ -27,9 +28,11 @@ export async function presetGenerator(
       nxVersion
     }
   };
-  generateFiles(tree, path.join(__dirname, 'files', 'workspace', '.vscode'), './.vscode', templateContext);
-  generateFiles(tree, path.join(__dirname, 'files', 'workspace', './.husky'), './.husky', templateContext);
-  generateFiles(tree, path.join(__dirname, 'files', 'workspace'), './', templateContext);
+  const workspaceFilesPath = path.join(__dirname, 'files', 'workspace');
+  tree.write('.vscode/extensions.json', readFileSync(path.join(workspaceFilesPath, '.vscode/extensions.json')));
+  tree.write('.vscode/settings.json.template', readFileSync(path.join(workspaceFilesPath, '.vscode/settings.json')));
+  generateFiles(tree, path.join(workspaceFilesPath, './.husky'), './.husky', templateContext);
+  generateFiles(tree, workspaceFilesPath, './', templateContext);
 
   await formatFiles(tree);
 }
