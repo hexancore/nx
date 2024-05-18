@@ -58,7 +58,7 @@
     "nx-release-publish": {
       "options": {
         "registry": "http://localhost:4873/",
-        "packageRoot": "dist\\{projectRoot}"
+        "packageRoot": "dist/{projectRoot}"
       }
     },
     "lint": {
