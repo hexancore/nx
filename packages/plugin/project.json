@@ -14,6 +14,7 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
+      "dependsOn": ["test"],
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/{projectRoot}",
@@ -62,8 +63,8 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputPath}"],
       "options": {
-
         "lintFilePatterns": [
           "{projectRoot}/**/*.ts",
           "{projectRoot}/package.json"
@@ -72,6 +73,7 @@
     },
     "lint-fix": {
       "executor": "@nx/eslint:lint",
+      "cache": false,
       "options": {
         "fix": true
       }

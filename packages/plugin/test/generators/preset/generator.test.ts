@@ -47,6 +47,7 @@ describe('preset generator', () => {
     '.husky/pre-commit',
   ].map(i => [i]);
   test.each(expectedWorkspaceFilesToExists)('%s should exist', (filePath) => {
+    console.log(tree.listChanges());
     expect(tree.exists(filePath)).toBeTruthy();
   });
 
