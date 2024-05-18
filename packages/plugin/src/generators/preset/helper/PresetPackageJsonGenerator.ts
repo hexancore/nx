@@ -28,7 +28,8 @@ export class PresetPackageJsonGenerator {
       o.license = 'UNLICENSED';
       o.scripts = o.scripts ?? {};
 
-      o.scripts['precommit'] = "nx run-many --targets=lint,test,build,e2e";
+      o.scripts['prepare'] = "node .husky/install.mjs",
+      o.scripts['precommit'] = "nx run-many --targets=lint,test,build";
       o.scripts['ci'] = "nx run-many --targets=lint,test,build,e2e --configuration=ci";
       return o;
     });

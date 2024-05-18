@@ -14,7 +14,7 @@ describe('preset generator', () => {
   }
   const options: PresetGeneratorSchema = { name: 'test-workspace' };
   beforeAll(async () => {
-    tree = createTreeWithEmptyWorkspace({layout: 'apps-libs'});
+    tree = createTreeWithEmptyWorkspace();
     await presetGenerator(tree, options);
   });
 
@@ -27,27 +27,31 @@ describe('preset generator', () => {
     '.npmrc',
     'CONTRIBUTING.md',
     'README.md',
-  ].map(i => [i]);
-  test.each(expectedWorkespaceFilesToMatchSnapshots)('%s should match snapshot', (filePath) => {
+  ];
+  test.each(expectedWorkespaceFilesToMatchSnapshots.map(i => [i]))('%s should match snapshot', (filePath) => {
     exceptWorkspaceFileMatchSnapshot(filePath);
   });
 
-  const expectedWorkspaceFilesToExists = [
-    'Makefile',
-    'tsconfig.base.json',
-    '.eslintignore',
-    '.eslintrc.json',
-    '.gitignore',
-    '.gitattributes',
-    '.editorconfig',
-    '.dockerignore',
-    '.vscode/extensions.json',
-    '.vscode/settings.json.template',
-    '.husky/install.mjs',
-    '.husky/pre-commit',
-  ].map(i => [i]);
-  test.each(expectedWorkspaceFilesToExists)('%s should exist', (filePath) => {
-    expect(tree.exists(filePath)).toBeTruthy();
+  test('only file from list should exist', () => {
+    const expectedWorkspaceFilesToExists = [
+      'Makefile',
+      'tsconfig.base.json',
+      '.eslintignore',
+      '.eslintrc.json',
+      '.gitignore',
+      '.gitattributes',
+      '.editorconfig',
+      '.dockerignore',
+      '.vscode/extensions.json',
+      '.vscode/settings.json.template',
+      '.husky/install.mjs',
+      '.husky/pre-commit',
+      'jest.config.ts',
+      'jest.preset.ts',
+      ...expectedWorkespaceFilesToMatchSnapshots
+    ];
+    const diff = tree.listChanges().map(c => c.path).filter(x => !expectedWorkspaceFilesToExists.includes(x));
+    expect(diff).toEqual([]);
   });
 
 });

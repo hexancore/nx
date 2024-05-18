@@ -291,7 +291,8 @@ exports[`preset generator package.json should match snapshot 1`] = `
   },
   "license": "UNLICENSED",
   "scripts": {
-    "precommit": "nx run-many --targets=lint,test,build,e2e",
+    "prepare": "node .husky/install.mjs",
+    "precommit": "nx run-many --targets=lint,test,build",
     "ci": "nx run-many --targets=lint,test,build,e2e --configuration=ci"
   }
 }

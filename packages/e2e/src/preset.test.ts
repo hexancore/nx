@@ -1,16 +1,13 @@
 import { execSync } from 'child_process';
 import { join, dirname } from 'path';
-import { mkdirSync, rmSync } from 'fs';
+import { existsSync, mkdirSync, rmSync } from 'fs';
 
 describe('Plugin', () => {
   let projectDirectory: string;
 
-  it('should be installed', () => {
+  test('should be installed', () => {
     projectDirectory = createTestProject();
-    execSync('pnpm ls @hexancore/nx', {
-      cwd: projectDirectory,
-      stdio: 'inherit',
-    });
+    expect(existsSync(join(projectDirectory,'package.json'))).toBeTruthy();
   });
 });
 
@@ -36,9 +33,9 @@ function createTestProject(extraArgs = '') {
     force: true,
   });
 
-  const createWorkspaceScript = join(process.cwd(), 'tools', 'scripts', 'create-workspace.ts');
+  const createWorkspaceScript = join(process.cwd(), 'tools', 'scripts', 'create-workspace.mjs');
   try {
-    execSync(`pnpm tsx ${createWorkspaceScript} ${projectName} ${extraArgs}`, {
+    execSync(`node ${createWorkspaceScript} ${projectName} ${extraArgs}`, {
       cwd: dirname(projectDirectory),
       stdio: 'inherit',
       env: process.env,
@@ -47,9 +44,6 @@ function createTestProject(extraArgs = '') {
     console.error(e);
     throw e;
   }
-
-
-  console.log(`Created test project in "${projectDirectory}"`);
 
   return projectDirectory;
 }

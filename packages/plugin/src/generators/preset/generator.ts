@@ -28,11 +28,11 @@ export async function presetGenerator(
       nxVersion
     }
   };
-  const workspaceFilesPath = path.join(__dirname, 'files', 'workspace');
-  tree.write('.vscode/extensions.json', readFileSync(path.join(workspaceFilesPath, 'vscode/extensions.json')));
-  tree.write('.vscode/settings.json.template', readFileSync(path.join(workspaceFilesPath, 'vscode/settings.json')));
-  generateFiles(tree, path.join(workspaceFilesPath, './.husky'), './.husky', templateContext);
-  generateFiles(tree, workspaceFilesPath, './', templateContext);
+  const filesPath = path.join(__dirname, 'files');
+  tree.write('.vscode/extensions.json', readFileSync(path.join(filesPath, 'vscode/extensions.json')));
+  tree.write('.vscode/settings.json.template', readFileSync(path.join(filesPath, 'vscode/settings.json')));
+  generateFiles(tree, path.join(filesPath, './.husky'), './.husky', templateContext);
+  generateFiles(tree, path.join(filesPath, 'workspace'), './', templateContext);
 
   await formatFiles(tree);
 }
