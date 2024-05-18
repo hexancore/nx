@@ -29,7 +29,7 @@ export class PresetPackageJsonGenerator {
       o.scripts = o.scripts ?? {};
 
       o.scripts['prepare'] = "node .husky/install.mjs",
-      o.scripts['precommit'] = "nx run-many --targets=lint,test,build";
+        o.scripts['precommit'] = "nx run-many --targets=lint,test,build";
       o.scripts['ci'] = "nx run-many --targets=lint,test,build,e2e --configuration=ci";
       return o;
     });
@@ -188,6 +188,7 @@ export class PresetPackageJsonGenerator {
       "axios-mock-adapter": "^1.22.0",
       "@types/node": "20.12.12",
       "@nestjs/testing": "^10.3.8",
+      "husky": "^9.0.11",
     };
   }
 }
