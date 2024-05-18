@@ -7,11 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2024-05-18
+
+## Fixed
+
+- fixes first publish
+
 ## [0.1.0] - 2024-05-18
 
 ### Added
 
 - Inital release
 
-[unreleased] https://github.com/hexancore/nx/compare/0.1.0...HEAD   
+[unreleased] https://github.com/hexancore/nx/compare/0.1.1...HEAD 
+[0.1.1] https://github.com/hexancore/nx/compare/0.1.0...0.1.1      
 [0.1.0] https://github.com/hexancore/nx/releases/tag/0.1.0
