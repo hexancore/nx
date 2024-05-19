@@ -1,0 +1,33 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "moduleResolution": "Node16",
+    "module": "Node16",
+    "target": "es2022",
+    "esModuleInterop": true,
+    "paths": {
+      "<%= project.importName %>": [
+        "<%= project.root %>/src/index.ts"
+      ],
+      "@": [
+        "<%= project.root %>/src"
+      ],
+      "@/*": [
+        "<%= project.root %>/src/*"
+      ],
+      "@test/*": [
+        "<%= project.root %>/test/helper/*"
+      ]
+    }
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.test.json"
+    },
+    {
+      "path": "./tsconfig.lib.json"
+    }
+  ]
+}

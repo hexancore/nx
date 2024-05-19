@@ -33,7 +33,6 @@ First off, thanks for taking the time to contribute! 🎉
 
 The following is a set of guidelines for contributing to test-workspace. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
 
-
 ## How Can I Contribute?
 
 ### Reporting Bugs
@@ -102,7 +101,8 @@ This section lists the labels we use to help us track and manage issues and pull
 
 ---
 
-Thank you for your contributions! Your help is greatly appreciated."
+Thank you for your contributions! Your help is greatly appreciated.
+"
 `;
 
 exports[`preset generator README.md should match snapshot 1`] = `
@@ -115,20 +115,23 @@ Replace with Yours project workspace description.
 To start contributing you need install some tools and init developer environment.
 
 ### Tools
- - NodeJS
- - pnpm
- - Nx (\`pnpm add --global nx@19.0.4\`)
- - Docker + Compose
- - make
+
+- NodeJS
+- pnpm
+- Nx (\`pnpm add --global nx@19.0.4\`)
+- Docker + Compose
+- make
 
 To init developer environment run:
+
 \`\`\`bash
 make init_devenv
 \`\`\`
 
 ## Contributing
 
-Contributing Guide is in separate file [CONTRIBUTING.md](./CONTRIBUTING.md)"
+Contributing Guide is in separate file [CONTRIBUTING.md](./CONTRIBUTING.md)
+"
 `;
 
 exports[`preset generator nx.json should match snapshot 1`] = `
@@ -138,9 +141,7 @@ exports[`preset generator nx.json should match snapshot 1`] = `
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "cache": true
     },
     "lint": {
@@ -152,19 +153,12 @@ exports[`preset generator nx.json should match snapshot 1`] = `
       "cache": true
     },
     "test": {
-      "inputs": [
-        "default",
-        "^default",
-        "{workspaceRoot}/jest.preset.js"
-      ],
+      "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"],
       "cache": true
     },
     "@nx/vite:test": {
       "cache": true,
-      "inputs": [
-        "default",
-        "^default"
-      ]
+      "inputs": ["default", "^default"]
     },
     "@nx/eslint:lint": {
       "inputs": [
@@ -182,10 +176,8 @@ exports[`preset generator nx.json should match snapshot 1`] = `
     }
   },
   "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
-    ],
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "sharedGlobals": [],
     "production": [
       "default",
       "!{projectRoot}/jest.config.{js,ts,mjs,mts}",
@@ -244,8 +236,8 @@ exports[`preset generator package.json should match snapshot 1`] = `
     "@typescript-eslint/parser": "7.3.0",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@vitejs/plugin-vue": "^5.0.4",
-    "@vitest/coverage-c8": "~0.32.4",
-    "@vitest/ui": "1.3.1",
+    "@vitest/coverage-v8": "1.6.*",
+    "@vitest/ui": "1.6.*",
     "@vue/eslint-config-typescript": "^11.0.3",
     "@vue/test-utils": "^2.4.5",
     "@vue/tsconfig": "^0.4.0",
@@ -265,7 +257,6 @@ exports[`preset generator package.json should match snapshot 1`] = `
     "jest-runner": "^29.7.0",
     "jest-runner-groups": "^2.2.0",
     "jsdom": "~22.1.0",
-    "nx-vue3-vite": "^0.27.0",
     "pinia": "^2.1.7",
     "postcss": "^8.4.38",
     "primeflex": "^3.3.1",
@@ -283,7 +274,7 @@ exports[`preset generator package.json should match snapshot 1`] = `
     "vee-validate": "^4.12.6",
     "vite": "^5.2.10",
     "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "1.3.1",
+    "vitest": "1.6.*",
     "vue": "^3.4.25",
     "vue-eslint-parser": "^9.4.2",
     "vue-i18n": "^9.13.1",

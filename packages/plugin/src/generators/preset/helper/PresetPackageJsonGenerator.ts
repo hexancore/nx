@@ -111,21 +111,17 @@ export class PresetPackageJsonGenerator {
     const vite = {
       "@vitejs/plugin-basic-ssl": "^1.1.0",
       "@vitejs/plugin-vue": "^5.0.4",
-      "@vitest/coverage-c8": "~0.32.4",
-      "@vitest/ui": "1.3.1",
+      "@vitest/coverage-v8": "1.6.*",
+      "@vitest/ui": "1.6.*",
+      "vitest": "1.6.*",
       "@rollup/plugin-node-resolve": "^15.2.3",
       "rollup": "^4.17.0",
       "vite": "^5.2.10",
       "vite-tsconfig-paths": "^4.3.2",
-      "vitest": "1.3.1",
       "autoprefixer": "^10.4.19",
       "@babel/core": "^7.24.4",
       "@babel/plugin-transform-modules-commonjs": "^7.24.1",
       "@babel/preset-env": "^7.24.4",
-    };
-
-    const nx = {
-      "nx-vue3-vite": "^0.27.0",
     };
 
     const primevue = {
@@ -147,7 +143,6 @@ export class PresetPackageJsonGenerator {
       ...vueI18n,
       ...vite,
       ...primevue,
-      ...nx,
       ...style
     };
   }
