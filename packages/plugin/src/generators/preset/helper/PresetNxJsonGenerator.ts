@@ -25,6 +25,7 @@ export class PresetNxJsonGenerator {
           "{projectRoot}/**/*",
           "sharedGlobals"
         ],
+        "sharedGlobals": [],
       };
       o.namedInputs.production = [
         "default",

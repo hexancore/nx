@@ -5,6 +5,11 @@
       "schema": "./src/generators/preset/schema.json",
       "description": "preset generator",
       "x-use-standalone-layout": true
+    },
+    "lib": {
+      "factory": "./src/generators/library/libraryGenerator",
+      "schema": "./src/generators/library/schema.json",
+      "description": "library generator"
     }
   }
 }

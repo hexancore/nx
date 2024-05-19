@@ -3,15 +3,11 @@ import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 
 import { presetGenerator } from '../../../src/generators/preset/generator';
 import { PresetGeneratorSchema } from '../../../src/generators/preset/schema';
+import {exceptWorkspaceFileMatchSnapshot } from '../../helper/functions';
 
 describe('preset generator', () => {
   let tree: Tree;
 
-  function exceptWorkspaceFileMatchSnapshot(filePath: string): void {
-    expect(tree.exists(filePath)).toBeTruthy();
-    const contents = tree.read(filePath)?.toString();
-    expect(contents).toMatchSnapshot();
-  }
   const options: PresetGeneratorSchema = { name: 'test-workspace' };
   beforeAll(async () => {
     tree = createTreeWithEmptyWorkspace();
@@ -29,7 +25,7 @@ describe('preset generator', () => {
     'README.md',
   ];
   test.each(expectedWorkespaceFilesToMatchSnapshots.map(i => [i]))('%s should match snapshot', (filePath) => {
-    exceptWorkspaceFileMatchSnapshot(filePath);
+    exceptWorkspaceFileMatchSnapshot(tree, filePath);
   });
 
   test('only file from list should exist', () => {
@@ -38,6 +34,7 @@ describe('preset generator', () => {
       'tsconfig.base.json',
       '.eslintignore',
       '.eslintrc.json',
+      '.prettierrc',
       '.gitignore',
       '.gitattributes',
       '.editorconfig',
@@ -48,6 +45,8 @@ describe('preset generator', () => {
       '.husky/pre-commit',
       'jest.config.ts',
       'jest.preset.ts',
+      'bin/util/MakeHelp',
+      'bin/util/util.sh',
       ...expectedWorkespaceFilesToMatchSnapshots
     ];
     const diff = tree.listChanges().map(c => c.path).filter(x => !expectedWorkspaceFilesToExists.includes(x));

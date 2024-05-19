@@ -89,6 +89,15 @@
         "jestConfig": "{projectRoot}/jest.config.ts",
         "runInBand": true
       }
+    },
+    "test-watch": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.ts",
+        "runInBand": true,
+        "watch": true
+      }
     }
   }
 }
