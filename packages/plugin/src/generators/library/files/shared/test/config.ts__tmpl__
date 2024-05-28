@@ -1,0 +1,7 @@
+import '@hexancore/common/testutil';
+
+// Catch all unhandled Promise rejections
+process.on('unhandledRejection', (err) => {
+  console.log(err);
+});
+

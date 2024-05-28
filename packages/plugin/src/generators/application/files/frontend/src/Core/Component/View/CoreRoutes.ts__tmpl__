@@ -1,0 +1,19 @@
+import Error404 from './Error/404.vue';
+import Dashboard from './Dashboard.vue';
+const CoreRoutes = [
+  {
+    path: '/:catchAll(.*)*',
+    component: Error404,
+  },
+  {
+    path: '/',
+    meta: {
+      menuId: 'main',
+      label: 'module.project.nav_menu.dashboard',
+      icon: 'pi pi-desktop',
+    },
+    component: Dashboard,
+  },
+];
+
+export default CoreRoutes;

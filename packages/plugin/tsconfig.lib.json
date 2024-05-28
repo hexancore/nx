@@ -9,7 +9,7 @@
   },
   "include": [
     "src/**/*.ts"
-, "src/generators/library/files/test/sample.test.ts__tmpl__"  ],
+  ],
   "exclude": [
     "jest.config.ts",
     "test/**/*.test.ts",

@@ -25,7 +25,7 @@
     "type": {
       "description": "The library type.",
       "type": "string",
-      "enum": ["frontend", "backend", "shared"],
+      "enum": ["backend", "shared"],
       "x-prompt": "Which library type would you like to use ? Choose 'none' to skip build setup.",
       "x-priority": "important"
     }

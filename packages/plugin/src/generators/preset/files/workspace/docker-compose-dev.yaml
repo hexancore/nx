@@ -1,0 +1,39 @@
+version: '3.6'
+services:
+  redis:
+    image: bitnami/redis:7.2
+    container_name: ${PROJECT}-redis
+    restart: always
+    environment:
+      - ALLOW_EMPTY_PASSWORD=no
+      - REDIS_AOF_ENABLED=no
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_ACLFILE=/bitnami/redis/config/users.acl
+    ports:
+      - ${REDIS_HOST_PORT}:6379
+    volumes:
+      - ${HOST_CONFIG_DIR}/redis:/bitnami/redis/config
+    tmpfs:
+      - /bitnami/redis/data:size=64M
+  db:
+    image: bitnami/postgresql:16.2.0
+    container_name: ${PROJECT}-db
+    restart: always
+    environment:
+      - POSTGRESQL_POSTGRES_PASSWORD=testroot
+      - POSTGRESQL_DATABASE=${PROJECT}
+      - POSTGRESQL_USERNAME=${PROJECT}
+      - POSTGRESQL_PASSWORD=test
+      - POSTGRESQL_ENABLE_TLS=yes
+      - POSTGRESQL_TLS_CERT_FILE=/opt/bitnami/postgresql/certs/db.crt
+      - POSTGRESQL_TLS_KEY_FILE=/opt/bitnami/postgresql/certs/db.key
+      - POSTGRESQL_TLS_CA_FILE=/opt/bitnami/postgresql/certs/ca.crt
+    volumes:
+      - ${HOST_CERTS_DIR}/db/db.crt:/opt/bitnami/postgresql/certs/db.crt
+      - ${HOST_CERTS_DIR}/db/db.key:/opt/bitnami/postgresql/certs/db.key
+      - ${HOST_CA_CRT}:/opt/bitnami/postgresql/certs/ca.crt
+    mem_limit: 512M
+    tmpfs:
+      - /tmp:size=256M
+    ports:
+      - ${DB_HOST_PORT}:5432

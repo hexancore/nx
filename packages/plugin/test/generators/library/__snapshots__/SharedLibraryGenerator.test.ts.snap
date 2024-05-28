@@ -1,0 +1,197 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Library Generator: Shared libs/task-manager/shared/.eslintrc.json should match snapshot 1`] = `
+"{
+  "extends": ["../../../.eslintrc.json"],
+  "ignorePatterns": ["!**/*"]
+
+}
+"
+`;
+
+exports[`Library Generator: Shared libs/task-manager/shared/README.md should match snapshot 1`] = `
+"# task-manager-shared
+
+## Building
+
+Run \`nx build task-manager-shared\` to build the library.
+
+## Running tests
+
+Run \`nx test task-manager-shared\` to execute the tests.
+"
+`;
+
+exports[`Library Generator: Shared libs/task-manager/shared/jest.config.ts should match snapshot 1`] = `
+"import createJestConfig from "../../../jest.preset";
+
+const jestConfig = createJestConfig(__dirname);
+
+export default jestConfig"
+`;
+
+exports[`Library Generator: Shared libs/task-manager/shared/package.json should match snapshot 1`] = `
+"{
+  "name": "@testcompany/task-manager-shared",
+  "type": "commonjs",
+  "private": true,
+  "dependencies": {
+    "tslib": "2.6.2"
+  },
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts"
+}
+"
+`;
+
+exports[`Library Generator: Shared libs/task-manager/shared/project.json should match snapshot 1`] = `
+"{
+  "name": "task-manager-shared",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "{projectRoot}/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/{projectRoot}",
+        "main": "{projectRoot}/src/index.ts",
+        "tsConfig": "{projectRoot}/tsconfig.build.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "{projectRoot}/**/*.ts",
+          "{projectRoot}/package.json"
+        ]
+      }
+    },
+    "lint-fix": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "{projectRoot}/**/*.ts",
+          "{projectRoot}/package.json"
+        ],
+        "fix": true
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "defaultConfiguration": "test",
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.ts",
+        "runInBand": true,
+        "passWithNoTests": true
+      }
+    },
+    "test-watch": {
+      "executor": "@nx/jest:jest",
+      "defaultConfiguration": "test",
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.ts",
+        "runInBand": true,
+        "passWithNoTests": true,
+        "watch": true
+      }
+    }
+  }
+}
+"
+`;
+
+exports[`Library Generator: Shared libs/task-manager/shared/tsconfig.build.json should match snapshot 1`] = `
+"{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../dist/out-tsc",
+    "declaration": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["test/**/*"]
+}
+"
+`;
+
+exports[`Library Generator: Shared libs/task-manager/shared/tsconfig.json should match snapshot 1`] = `
+"{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "moduleResolution": "Node16",
+    "module": "Node16",
+    "target": "es2022",
+    "esModuleInterop": true,
+    "paths": {
+      "@testcompany/task-manager-shared": [
+        "libs/task-manager/shared/src/index.ts"
+      ],
+      "@": [
+        "libs/task-manager/shared/src"
+      ],
+      "@/*": [
+        "libs/task-manager/shared/src/*"
+      ],
+      "@test/*": [
+        "libs/task-manager/shared/test/helper/*"
+      ]
+    }
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.test.json"
+    },
+    {
+      "path": "./tsconfig.build.json"
+    }
+  ]
+}"
+`;
+
+exports[`Library Generator: Shared libs/task-manager/shared/tsconfig.test.json should match snapshot 1`] = `
+"{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../dist/out-tsc",
+    "types": ["jest", "node"]
+  },
+
+  "files": [
+    "../../../node_modules/jest-expect-message/types/index.d.ts",
+    "../../../node_modules/@hexancore/common/lib/cjs/Test/Matchers.d.ts"
+  ],
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.test.ts"
+  ]
+}
+"
+`;
+
+exports[`Library Generator: Shared nx.json should match snapshot 1`] = `"{"affected":{"defaultBase":"main"},"targetDefaults":{"build":{"cache":true},"lint":{"cache":true}}}"`;
+
+exports[`Library Generator: Shared package.json should match snapshot 1`] = `
+"{
+  "name": "@testcompany/source"
+}
+"
+`;
+
+exports[`Library Generator: Shared tsconfig.base.json should match snapshot 1`] = `
+"{
+  "compilerOptions": {
+    "paths": {
+      "@testcompany/task-manager-shared": [
+        "libs/task-manager/shared/src/index.ts"
+      ]
+    }
+  }
+}
+"
+`;

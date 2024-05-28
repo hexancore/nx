@@ -1,10 +1,22 @@
 import { startLocalRegistry } from '@nx/js/plugins/jest/local-registry';
+import { existsSync, rmSync } from 'fs';
 import { releasePublish, releaseVersion } from 'nx/release';
+import { join } from 'path';
 
 export default async () => {
   // local registry target to run
   const localRegistryTarget = '@nx-hexancore/source:local-registry';
   const storage = './tmp/local-registry/storage';
+
+
+  const cwd = process.cwd();
+  process.env['PNPM_HOME'] = join(cwd, 'tmp', 'pnpm-store');
+  if (existsSync(process.env['PNPM_HOME'])) {
+    rmSync(process.env['PNPM_HOME'], {
+      recursive: true,
+      force: true,
+    });
+  }
 
   global.stopLocalRegistry = await startLocalRegistry({
     localRegistryTarget,

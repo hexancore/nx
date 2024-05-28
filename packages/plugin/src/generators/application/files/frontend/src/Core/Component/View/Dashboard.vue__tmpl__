@@ -1,0 +1,16 @@
+<template>
+  <div class="q-pa-md row items-start q-gutter-md">
+    <Card>
+      <template #title> Dashboard </template>
+      <template #content>
+        <h1>Content</h1>
+      </template>
+    </Card>
+  </div>
+</template>
+
+<script setup>
+
+</script>
+
+<style lang="sass" scoped></style>

@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "<%= project.workspaceRootRelative %>dist/out-tsc",
+    "declaration": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["test/**/*"]
+}

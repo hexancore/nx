@@ -36,9 +36,8 @@ export class PresetNxJsonGenerator {
 
       o.targetDefaults = {
         "build": {
-          "dependsOn": [
-            "^build"
-          ],
+          "inputs": ["default", "!{projectRoot}/test/**/*"],
+          "dependsOn": ["^build"],
           "cache": true
         },
         "lint": {
@@ -49,12 +48,19 @@ export class PresetNxJsonGenerator {
           ],
           "cache": true
         },
+        "lint-fix": {
+          "cache": false
+        },
         "test": {
           "inputs": [
             "default",
             "^default",
             "{workspaceRoot}/jest.preset.js"
           ],
+          "cache": true
+        },
+        "test-watch": {
+          "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"],
           "cache": true
         },
         "@nx/vite:test": {

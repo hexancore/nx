@@ -10,6 +10,11 @@
       "factory": "./src/generators/library/libraryGenerator",
       "schema": "./src/generators/library/schema.json",
       "description": "library generator"
+    },
+    "app": {
+      "factory": "./src/generators/application/applicationGenerator",
+      "schema": "./src/generators/application/schema.json",
+      "description": "application generator"
     }
   }
 }

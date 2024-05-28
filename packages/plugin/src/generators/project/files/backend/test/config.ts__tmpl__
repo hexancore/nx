@@ -1,0 +1,24 @@
+import 'reflect-metadata';
+import { AppMeta, EnvAppMetaProvider } from '@hexancore/common';
+import path from 'path';
+import { existsSync, mkdirSync } from 'fs';
+import '@hexancore/common/testutil';
+import { removeSync } from 'fs-extra';
+
+AppMeta.setProvider(EnvAppMetaProvider);
+
+// Setup tmp
+process.env['TEST_TMP_DIR'] = path.join(__dirname, 'tmp');
+if (existsSync(process.env['TEST_TMP_DIR'])) {
+  removeSync(process.env['TEST_TMP_DIR']);
+}
+mkdirSync(process.env['TEST_TMP_DIR']);
+
+// Catch all unhandled Promise rejections
+process.on('unhandledRejection', (err) => {
+  console.log(err);
+});
+
+export function setup() {
+  AppMeta.setProvider(EnvAppMetaProvider);
+}

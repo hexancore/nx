@@ -1,0 +1,11 @@
+var fs = require('fs');
+const configPath = process.env["PM2_CONFIG_PATH"] ?? './config/pm2.config.json';
+const config = JSON.parse(fs.readFileSync(configPath, { encoding: 'utf8' }));
+module.exports = {
+  apps: [
+    {
+      script: './entrypoint',
+      ...config,
+    },
+  ],
+};

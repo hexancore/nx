@@ -31,14 +31,18 @@
       "extends": ["plugin:@nx/typescript"],
       "rules": {
         "semi": ["error", "always"],
-        "@typescript-eslint/no-explicit-any": "off"
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
       }
     },
     {
       "files": ["*.js", "*.jsx"],
       "extends": ["plugin:@nx/javascript"],
       "rules": {
-        "semi": ["error", "always"]
+        "semi": ["error", "always"],
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
       }
     },
     {
