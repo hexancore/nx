@@ -1,0 +1,29 @@
+{
+  "extends": "<%= project.workspaceRootRelative %>tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "<%= project.importName %>": [
+        "<%= project.root %>/src/index.ts"
+      ],
+      "@": [
+        "<%= project.root %>/src"
+      ],
+      "@/*": [
+        "<%= project.root %>/src/*"
+      ],
+      "@test/*": [
+        "<%= project.root %>/test/helper/*"
+      ]
+    }
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.test.json"
+    },
+    {
+      "path": "./tsconfig.build.json"
+    }
+  ]
+}

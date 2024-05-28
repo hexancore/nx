@@ -1,0 +1,32 @@
+import { createI18n } from 'vue-i18n';
+import messages from '@intlify/unplugin-vue-i18n/messages';
+import { App } from 'vue';
+
+export const DEFAULT_LOCALE = 'en';
+export const SUPPORTED_LOCALES = ['en'];
+
+export function setI18nLanguage(i18n: any, locale: string): void {
+  i18n.global.locale.value = locale;
+  window.document.querySelector('html')?.setAttribute('lang', locale);
+}
+
+function setupI18n(): any {
+  const i18n = createI18n({
+    locale: DEFAULT_LOCALE,
+    fallbackLocal: DEFAULT_LOCALE,
+    legacy: false,
+    messages,
+    globalInjection: true,
+  });
+  setI18nLanguage(i18n, DEFAULT_LOCALE);
+  return i18n;
+}
+
+const i18n = setupI18n();
+export default i18n;
+
+export function I18NCorePlugin(app: App) {
+  app.use(i18n);
+}
+
+

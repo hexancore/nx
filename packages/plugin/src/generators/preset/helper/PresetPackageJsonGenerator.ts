@@ -2,6 +2,7 @@ import {
   addDependenciesToPackageJson,
   updateJson,
   Tree,
+  removeDependenciesFromPackageJson,
 } from '@nx/devkit';
 
 export class PresetPackageJsonGenerator {
@@ -10,12 +11,11 @@ export class PresetPackageJsonGenerator {
     private nxVersion: string,
     private hcNxPluginVersion: string
   ) {
-
   }
 
   public static run(tree: Tree, options: {
     nxVersion: string,
-    hcNxPluginVersion: string
+    hcNxPluginVersion: string;
   }) {
     const g = new this(options.nxVersion, options.hcNxPluginVersion);
     g.apply(tree);
@@ -28,8 +28,8 @@ export class PresetPackageJsonGenerator {
       o.license = 'UNLICENSED';
       o.scripts = o.scripts ?? {};
 
-      o.scripts['prepare'] = "node .husky/install.mjs",
-        o.scripts['precommit'] = "nx run-many --targets=lint,test,build";
+      o.scripts['prepare'] = "node .husky/install.mjs";
+      o.scripts['precommit'] = "nx run-many --targets=lint,test,build";
       o.scripts['ci'] = "nx run-many --targets=lint,test,build,e2e --configuration=ci";
       return o;
     });
@@ -38,6 +38,7 @@ export class PresetPackageJsonGenerator {
   private generateDeps(tree: Tree): void {
     const deps = this.createDeps();
     const devDeps = this.createDevDeps();
+    removeDependenciesFromPackageJson(tree, ['@hexancore/nx'], []);
     addDependenciesToPackageJson(tree, deps, devDeps);
   }
 
@@ -52,7 +53,9 @@ export class PresetPackageJsonGenerator {
 
     return {
       ...hexancore,
-      'tslib': '2.6.2'
+      'tslib': '2.6.2',
+      'fs-extra': '^11.2.0',
+      'reflect-metadata': '^0.1.13',
     };
   }
 
@@ -80,10 +83,8 @@ export class PresetPackageJsonGenerator {
   }
 
   private createHexancoreDevDeps(): Record<string, string> {
-    const [major, minor] = this.hcNxPluginVersion.split('.');
-
     return {
-      "@hexancore/nx": `${major}.${minor}.*`,
+      "@hexancore/nx": this.hcNxPluginVersion,
       "@hexancore/mocker": "^1.1.2",
     };
   }
@@ -104,7 +105,7 @@ export class PresetPackageJsonGenerator {
     const vueI18n = {
       "vue-i18n": "^9.13.1",
       "@intlify/eslint-plugin-vue-i18n": "^2.0.0",
-      "@intlify/unplugin-vue-i18n": "^2.0.0",
+      "@intlify/unplugin-vue-i18n": "^4.0.0",
       "unplugin-swc": "^1.4.5",
     };
 
@@ -126,15 +127,15 @@ export class PresetPackageJsonGenerator {
 
     const primevue = {
       "primeflex": "^3.3.1",
-      "primeicons": "^6.0.1",
+      "primeicons": "^7.0.0",
       "primevue": "^3.52.0",
     };
 
     const style = {
       "postcss": "^8.4.38",
       "sass": "^1.75.0",
-      "stylelint": "^15.11.0",
-      "stylelint-config-standard": "^33.0.0",
+      "stylelint": "^16.6.0",
+      "stylelint-config-standard": "^36.0.0",
       "@samatech/postcss-basics": "^0.6.0",
     };
 
@@ -152,14 +153,14 @@ export class PresetPackageJsonGenerator {
       "eslint": "8.57.0",
       "eslint-plugin-import": "^2.29.1",
       "eslint-plugin-vue": "^9.25.0",
-      "@typescript-eslint/parser": "7.3.0",
+      "@typescript-eslint/parser": "^7.10.0",
       "@stylistic/eslint-plugin": "^2.1.0",
     };
   }
 
   public createJestDevDeps(): Record<string, string> {
     return {
-      "happy-dom": "^9.20.3",
+      "happy-dom": "^14.11.0",
       "jest": "^29.7.0",
       "jest-docblock": "^29.7.0",
       "jest-environment-jsdom": "^29.7.0",
@@ -167,7 +168,7 @@ export class PresetPackageJsonGenerator {
       "jest-expect-message": "^1.1.3",
       "jest-runner": "^29.7.0",
       "jest-runner-groups": "^2.2.0",
-      "jsdom": "~22.1.0",
+      "jsdom": "^24.0.0",
       "ts-jest": "^29.1.2",
       "@types/jest": "^29.5.12",
       "@jest/globals": "^29.7.0",

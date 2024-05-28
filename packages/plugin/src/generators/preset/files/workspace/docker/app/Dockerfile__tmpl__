@@ -1,0 +1,54 @@
+# pnpm https://github.com/moby/moby/issues/40449#issuecomment-1758956399
+ARG NODE_IMAGE=node:22-alpine3.18
+ARG PM2_VERSION=5.3.1
+ARG USER_UID=1000
+
+FROM "$NODE_IMAGE" as deps
+
+ENV NODE_ENV=production
+ENV PNPM_HOME="/app/.pnpm-store"
+ENV PATH="$PNPM_HOME:$PATH"
+
+RUN mkdir -p /app/.pnpm-store && chown -R node:node /app && chmod -R 777 /app && corepack enable && pnpm config set store-dir "$PNPM_HOME"
+
+USER node
+WORKDIR /app
+
+COPY --chown=node:node ./pnpm-lock.yaml ./
+RUN --mount=type=cache,target=/app/.pnpm-store,uid=${USER_UID},gid=${USER_UID} pnpm fetch --prod --ignore-scripts
+
+COPY --chown=node:node ./pnpm-lock.yaml ./package.json ./prod/
+RUN --mount=type=cache,ro,target=/app/.pnpm-store,uid=${USER_UID},gid=${USER_UID} cd prod && pnpm install --prod --offline --frozen-lockfile --ignore-scripts
+
+##########################
+# DEV container tool stage
+FROM deps as dev
+RUN --mount=type=cache,target=/app/.pnpm-store,uid=${USER_UID},gid=${USER_UID} pnpm fetch --dev --ignore-scripts
+
+COPY --chown=node:node ./package.json ./
+RUN --mount=type=cache,ro,target=/app/.pnpm-store,uid=${USER_UID},gid=${USER_UID} pnpm install --prod=false --offline --frozen-lockfile --ignore-scripts
+
+EXPOSE 3000
+
+CMD ["sleep", "1000"]
+
+#######################
+# API application stage
+FROM $NODE_IMAGE as app_api
+ARG APP_ID
+
+RUN mkdir /app && chown node:node /app && chmod 770 /app && npm i -g pm2@${PM2_VERSION}
+WORKDIR /app
+
+RUN --mount=type=bind,from=deps,source=/app,target=/tmp/deps cp -R -p /tmp/deps/prod/* ./
+
+COPY --chown=node:node ./dist/apps/${APP_ID} ./apps/${APP_ID}
+COPY --chown=node:node ./dist/libs ./libs
+COPY --chown=node:node ./docker/app/pm2.config.cjs ./pm2.config.cjs
+
+USER node
+ENV NODE_ENV=production
+EXPOSE 3000
+RUN ln -s apps/${APP_ID}/src/index.js entrypoint
+
+CMD ["pm2-runtime", "--json", "pm2.config.cjs"]

@@ -1,0 +1,89 @@
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import path from 'path';
+
+import resolvePlugin from '@rollup/plugin-node-resolve';
+import basicSsl from '@vitejs/plugin-basic-ssl';
+
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+
+import { assetDir, chunkFileNames, entryFileNames, processAssetFileNames } from './vite/Assets';
+
+
+export default defineConfig({
+  root: __dirname,
+  cacheDir: '<%= project.workspaceRootRelative %>tmp/vite/<%= project.name %>',
+  server: {
+    port: 20021,
+    host: 'localhost',
+
+    fs: {
+      // Allow serving files from one level up to the project root
+      strict: false,
+    },
+  },
+
+  preview: {
+    port: 20022,
+    host: 'localhost',
+  },
+
+  publicDir: path.resolve(__dirname, './public'),
+  build: {
+    outDir: '<%= project.workspaceRootRelative %>dist/<%= project.root %>',
+    reportCompressedSize: true,
+    commonjsOptions: { transformMixedEsModules: true },
+    minify: true,
+    assetsDir: assetDir,
+    // don't inline anything for demo
+    assetsInlineLimit: 0,
+    emptyOutDir: true,
+    rollupOptions: {
+      preserveSymlinks: true,
+      output: {
+        entryFileNames: entryFileNames,
+        assetFileNames: processAssetFileNames,
+        chunkFileNames: chunkFileNames
+      }
+    }
+  },
+
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          //isCustomElement: (tag) => /^[A-Z]/.test(tag)
+        },
+      },
+    }),
+    nxViteTsPaths(),
+    VueI18nPlugin({
+      include: [path.resolve(__dirname, './src/*/Asset/Locale/**')],
+      defaultSFCLang: 'yaml',
+      allowDynamic: true,
+      dropMessageCompiler: true,
+    }),
+    resolvePlugin(undefined),
+    basicSsl(),
+  ],
+
+  // Uncomment this if you are using workers.
+  // worker: {
+  //  plugins: [ nxViteTsPaths() ],
+  // },
+
+  test: {
+    reporters: ['default'],
+    coverage: {
+      reportsDirectory: '<%= project.workspaceRootRelative %>coverage/<%= project.root %>',
+      provider: 'v8',
+    },
+    globals: true,
+    cache: {
+      dir: '<%= project.workspaceRootRelative %>tmp/vitest/<%= project.name %>',
+    },
+    environment: 'jsdom',
+    include: ['test/**/*.test.ts'],
+  },
+});

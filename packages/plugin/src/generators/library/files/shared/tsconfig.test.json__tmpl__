@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "<%= project.workspaceRootRelative %>dist/out-tsc",
+    "types": ["jest", "node"]
+  },
+
+  "files": [
+    "<%= project.workspaceRootRelative %>node_modules/jest-expect-message/types/index.d.ts",
+    "<%= project.workspaceRootRelative %>node_modules/@hexancore/common/lib/cjs/Test/Matchers.d.ts"
+  ],
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.test.ts"
+  ]
+}

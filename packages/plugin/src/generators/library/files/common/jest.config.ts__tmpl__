@@ -1,5 +1,0 @@
-import createJestConfig from "../../../jest.preset";
-
-const jestConfig = createJestConfig(__dirname);
-
-export default jestConfig

@@ -1,0 +1,10 @@
+<template>
+  <img src="../Asset/Image/logo.png" alt="Logo" />
+</template>
+
+<style lang="postcss" scoped>
+img {
+  width: 28px;
+  height: 28px;
+}
+</style>

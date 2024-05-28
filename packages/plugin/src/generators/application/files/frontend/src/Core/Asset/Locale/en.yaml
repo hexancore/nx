@@ -1,0 +1,24 @@
+common:
+  app:
+    name: <%= project.name %>
+  nav_menu: Navigation menu
+  search: Search...
+  footer_info:
+    about: About
+    help: Help
+    terms_of_use: Terms of use
+    privacy_policy: Privacy Policy
+  form:
+    field:
+      username: Username
+      email: E-mail
+      password: Password
+  error:
+    unknown: Unknown error occurred
+    page_not_found:
+      lines:
+        - Oops! We can't find that page.,
+        - "Don't worry, it might be our mistake. Maybe the page has been moved or deleted, or perhaps you just typed the address incorrectly. Let's get you back on track:"
+      button:
+        go_dashboard: Go Back Dashboard
+        contact_support: Contact Support

@@ -1,0 +1,16 @@
+import { createRouter, createWebHistory } from 'vue-router';
+import AppLayout from '../../Component/Layout/AppLayout.vue';
+import CoreRoutes from '../../Component/View/CoreRoutes.ts';
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      component: AppLayout,
+      children: [...CoreRoutes],
+    },
+  ],
+});
+
+export default router;

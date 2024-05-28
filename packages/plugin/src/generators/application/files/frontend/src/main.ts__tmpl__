@@ -1,0 +1,18 @@
+process = process ?? { env: {} };
+
+import { createApp } from 'vue';
+import App from './Core/Component/View/App.vue';
+
+import { PrimeVueCorePlugin } from './Core/Service/Plugin/PrimeVueCorePlugin.ts';
+import router from './Core/Service/Router/Router.ts';
+import { I18NCorePlugin } from './Core/Service/Plugin/I18NCorePlugin.ts';
+import { PiniaCorePlugin } from './Core/Service/Plugin/PiniaCorePlugin.ts';
+
+const app = createApp(App);
+
+PrimeVueCorePlugin(app);
+I18NCorePlugin(app);
+PiniaCorePlugin(app);
+app.use(router);
+
+app.mount('#root');
