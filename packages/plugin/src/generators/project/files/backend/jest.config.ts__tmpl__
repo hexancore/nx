@@ -1,5 +1,9 @@
-import createJestConfig from "<%= project.workspaceRootRelative %>jest.preset";
+import { defineProjectJestConfig } from "<%= project.relative.dotWorkspace %>/jest/jest.preset";
 
-const jestConfig = createJestConfig(__dirname);
+const project = {
+  workspaceRootRelative: '<%= project.relative.workspaceRoot %>',
+  root: '<%= project.root %>',
+  name: '<%= project.name %>'
+};
 
-export default jestConfig
+export default defineProjectJestConfig(__dirname, project);

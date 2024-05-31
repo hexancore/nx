@@ -3,7 +3,7 @@ import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 
 import { presetGenerator } from '../../../src/generators/preset/generator';
 import { PresetGeneratorSchema } from '../../../src/generators/preset/schema';
-import { exceptWorkspaceFileMatchSnapshot } from '../../helper/functions';
+import { exceptWorkspaceFileMatchSnapshot, expectedFiles } from '../../helper/functions';
 
 describe('preset generator', () => {
   let tree: Tree;
@@ -14,6 +14,20 @@ describe('preset generator', () => {
     await presetGenerator(tree, options);
   });
 
+  const expectedDotWorkspaceDirFilesToMatchSnapshots = expectedFiles('.workspace/', [
+    'jest/jest.preset.ts',
+    'storybook/storybook.preset.ts',
+    'vite/assets.ts',
+    'vite/vite.preset.ts',
+  ]);
+
+  const expectedDotDockerDirFilesToMatchSnapshots = expectedFiles('.workspace/docker/', [
+    'app/Dockerfile',
+    'app/pm2.config.cjs',
+    'dev/.env',
+    'dev/docker-compose-dev.yaml',
+  ]);
+
   const expectedWorkespaceFilesToMatchSnapshots = [
     'nx.json',
     'package.json',
@@ -23,13 +37,10 @@ describe('preset generator', () => {
     '.npmrc',
     'CONTRIBUTING.md',
     'README.md',
-    'docker/app/Dockerfile',
-    'docker/app/pm2.config.cjs',
-    'docker/dev/.env',
     'Makefile',
     'tsconfig.base.json',
-
-    'docker-compose-dev.yaml',
+    ...expectedDotWorkspaceDirFilesToMatchSnapshots,
+    ...expectedDotDockerDirFilesToMatchSnapshots
   ];
   test.each(expectedWorkespaceFilesToMatchSnapshots.map(i => [i]))('%s should match snapshot', (filePath) => {
     exceptWorkspaceFileMatchSnapshot(tree, filePath);
@@ -44,24 +55,27 @@ describe('preset generator', () => {
       '.gitattributes',
       '.editorconfig',
       '.dockerignore',
+      '.prettierignore',
+      '.prettierrc.js',
       '.vscode/extensions.json',
       '.vscode/settings.json.template',
       '.husky/install.mjs',
       '.husky/pre-commit',
       'jest.config.ts',
-      'jest.preset.ts',
-      'bin/util/MakeHelp',
-      'bin/util/util.sh',
-      'docker/dev/ca/ca.crt',
-      'docker/dev/ca/ca.key',
-      'docker/dev/ca/ca.srl',
-      'docker/dev/ca/certs/db/db.crt',
-      'docker/dev/ca/certs/db/db.key',
-      'docker/dev/ca/certs/redis/redis.crt',
-      'docker/dev/ca/certs/redis/redis.key',
-      'docker/dev/ca/create_ca.sh',
-      'docker/dev/ca/gen_cert.sh',
-      'docker/dev/redis/users.acl',
+      '.workspace/bin/util/MakeHelp',
+      '.workspace/bin/util/util.sh',
+      ...expectedFiles('.workspace/docker/', [
+        'dev/ca/ca.crt',
+        'dev/ca/ca.key',
+        'dev/ca/ca.srl',
+        'dev/ca/certs/db/db.crt',
+        'dev/ca/certs/db/db.key',
+        'dev/ca/certs/redis/redis.crt',
+        'dev/ca/certs/redis/redis.key',
+        'dev/ca/create_ca.sh',
+        'dev/ca/gen_cert.sh',
+        'dev/redis/users.acl',
+      ]),
       ...expectedWorkespaceFilesToMatchSnapshots
     ];
     const diff = tree.listChanges().map(c => c.path).filter(x => !expectedWorkspaceFilesToExists.includes(x));

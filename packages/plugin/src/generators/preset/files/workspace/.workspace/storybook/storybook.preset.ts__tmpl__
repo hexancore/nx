@@ -1,0 +1,28 @@
+import { StorybookConfig } from '@storybook/vue3-vite';
+
+export function defineProjectStorybookConfig(projectRoot: string): StorybookConfig {
+  return {
+    stories: ['../src/**/*.stories.@(ts|tsx)'],
+    addons: ['@storybook/addon-essentials', '@storybook/addon-interactions'],
+
+    core: {
+      disableTelemetry: true,
+    },
+
+    framework: {
+      name: '@storybook/vue3-vite',
+      options: {
+
+        builder: {
+          viteConfigPath: `${projectRoot}/vite.config.ts`,
+        },
+      },
+    },
+
+    docs: {},
+  };
+}
+
+// To customize your Vite configuration you can use the viteFinal field.
+// Check https://storybook.js.org/docs/react/builders/vite#configuration
+// and https://nx.dev/recipes/storybook/custom-builder-configs

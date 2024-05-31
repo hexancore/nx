@@ -1,5 +1,5 @@
 {
-  "extends": ["<%= project.workspaceRootRelative %>.eslintrc.json"],
+  "extends": ["<%= project.relative.workspaceRoot %>/.eslintrc.json"],
   "ignorePatterns": ["!**/*"]
 
 }

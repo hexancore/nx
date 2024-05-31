@@ -27,7 +27,9 @@ export class HcNxProjectHelper {
   public addApplication(directory: string, type: ApplicationType): ApplicationProjectMeta {
     const project = this.createProjectMeta<ApplicationType>(directory, true, type);
     this.addProjectConfiguration(project);
-    ProjectPackageJsonGenerator.run(this.tree, { project });
+    if (type === 'backend') {
+      ProjectPackageJsonGenerator.run(this.tree, { project });
+    }
     return project;
   }
 
@@ -42,10 +44,14 @@ export class HcNxProjectHelper {
   private createProjectMeta<T extends ApplicationType | LibraryType>(directory: string, isApp: boolean, type: T): ProjectMeta<T> {
     const name = HcNxProjectHelper.getProjectNameFromDirectory(directory, isApp);
     const projectRoot = HcNxProjectHelper.getProjectRoot(directory, isApp);
+    const relativeWorkspaceRoot = '../'.repeat(projectRoot.split('/').length).slice(0, -1);
     return {
       name,
       root: projectRoot,
-      workspaceRootRelative: '../'.repeat(projectRoot.split('/').length),
+      relative: {
+        workspaceRoot: relativeWorkspaceRoot,
+        dotWorkspace: relativeWorkspaceRoot + '/.workspace',
+      },
       importName: this.helper.workspacePackageNamespace + '/' + name,
       type: isApp ? 'application' : 'library',
       subtype: type
@@ -81,13 +87,7 @@ export class HcNxProjectHelper {
       root: project.root,
       projectType: project.type,
       sourceRoot: '{projectRoot}/src',
-      targets: {
-        build: this.targetHelper.buildTarget({ main: project.type === 'application' ? 'main.ts' : 'index.ts' }),
-        lint: this.targetHelper.lintTarget({}),
-        "lint-fix": this.targetHelper.lintTarget({ fix: true }),
-        test: this.targetHelper.testTarget({}),
-        'test-watch': this.targetHelper.testTarget({ watch: true }),
-      }
+      targets: this.targetHelper.targets(project),
     });
   }
 

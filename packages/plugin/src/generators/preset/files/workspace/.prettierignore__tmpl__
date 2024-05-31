@@ -1,0 +1,10 @@
+node_modules
+tmp
+dist
+coverage
+.nx
+.workspace
+
+**/*.ts
+**/*.vue
+**/*.tsx

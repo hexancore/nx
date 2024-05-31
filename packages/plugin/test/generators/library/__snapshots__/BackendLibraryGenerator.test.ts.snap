@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Library Generator: Backend libs/task-manager/backend/.eslintrc.json should match snapshot 1`] = `
+exports[`Library Generator: Backend libs/acme/backend/.eslintrc.json should match snapshot 1`] = `
 "{
   "extends": ["../../../.eslintrc.json"],
   "ignorePatterns": ["!**/*"]
@@ -9,30 +9,28 @@ exports[`Library Generator: Backend libs/task-manager/backend/.eslintrc.json sho
 "
 `;
 
-exports[`Library Generator: Backend libs/task-manager/backend/README.md should match snapshot 1`] = `
-"# task-manager-backend
+exports[`Library Generator: Backend libs/acme/backend/README.md should match snapshot 1`] = `
+"# acme-backend
 
-## Building
 
-Run \`nx build task-manager-backend\` to build the library.
-
-## Running tests
-
-Run \`nx test task-manager-backend\` to execute the tests.
 "
 `;
 
-exports[`Library Generator: Backend libs/task-manager/backend/jest.config.ts should match snapshot 1`] = `
-"import createJestConfig from "../../../jest.preset";
+exports[`Library Generator: Backend libs/acme/backend/jest.config.ts should match snapshot 1`] = `
+"import { defineProjectJestConfig } from "../../../.workspace/jest/jest.preset";
 
-const jestConfig = createJestConfig(__dirname);
+const project = {
+  workspaceRootRelative: '../../..',
+  root: 'libs/acme/backend',
+  name: 'acme-backend'
+};
 
-export default jestConfig"
+export default defineProjectJestConfig(__dirname, project);"
 `;
 
-exports[`Library Generator: Backend libs/task-manager/backend/package.json should match snapshot 1`] = `
+exports[`Library Generator: Backend libs/acme/backend/package.json should match snapshot 1`] = `
 "{
-  "name": "@testcompany/task-manager-backend",
+  "name": "@testcompany/acme-backend",
   "type": "commonjs",
   "private": true,
   "dependencies": {
@@ -44,60 +42,23 @@ exports[`Library Generator: Backend libs/task-manager/backend/package.json shoul
 "
 `;
 
-exports[`Library Generator: Backend libs/task-manager/backend/project.json should match snapshot 1`] = `
+exports[`Library Generator: Backend libs/acme/backend/project.json should match snapshot 1`] = `
 "{
-  "name": "task-manager-backend",
+  "name": "acme-backend",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "{projectRoot}/src",
   "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
-      "options": {
-        "outputPath": "dist/{projectRoot}",
-        "main": "{projectRoot}/src/index.ts",
-        "tsConfig": "{projectRoot}/tsconfig.build.json"
-      }
-    },
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "options": {
-        "lintFilePatterns": [
-          "{projectRoot}/**/*.ts",
-          "{projectRoot}/package.json"
-        ]
-      }
-    },
-    "lint-fix": {
-      "executor": "@nx/eslint:lint",
-      "options": {
-        "lintFilePatterns": [
-          "{projectRoot}/**/*.ts",
-          "{projectRoot}/package.json"
-        ],
-        "fix": true
-      }
+      "executor": "@nx/eslint:lint"
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "defaultConfiguration": "test",
-      "options": {
-        "jestConfig": "{projectRoot}/jest.config.ts",
-        "runInBand": true,
-        "passWithNoTests": true
-      }
+      "executor": "@nx/jest:jest"
     },
-    "test-watch": {
-      "executor": "@nx/jest:jest",
-      "defaultConfiguration": "test",
+    "build": {
+      "executor": "@nx/js:tsc",
       "options": {
-        "jestConfig": "{projectRoot}/jest.config.ts",
-        "runInBand": true,
-        "passWithNoTests": true,
-        "watch": true
+        "main": "{projectRoot}/src/index.ts"
       }
     }
   }
@@ -105,7 +66,7 @@ exports[`Library Generator: Backend libs/task-manager/backend/project.json shoul
 "
 `;
 
-exports[`Library Generator: Backend libs/task-manager/backend/tsconfig.build.json should match snapshot 1`] = `
+exports[`Library Generator: Backend libs/acme/backend/tsconfig.build.json should match snapshot 1`] = `
 "{
   "extends": "./tsconfig.json",
   "compilerOptions": {
@@ -118,22 +79,24 @@ exports[`Library Generator: Backend libs/task-manager/backend/tsconfig.build.jso
 "
 `;
 
-exports[`Library Generator: Backend libs/task-manager/backend/tsconfig.json should match snapshot 1`] = `
+exports[`Library Generator: Backend libs/acme/backend/tsconfig.json should match snapshot 1`] = `
 "{
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
+    "moduleResolution": "Node16",
+    "module": "Node16",
     "paths": {
-      "@testcompany/task-manager-backend": [
-        "libs/task-manager/backend/src/index.ts"
+      "@testcompany/acme-backend": [
+        "libs/acme/backend/src/index.ts"
       ],
       "@": [
-        "libs/task-manager/backend/src"
+        "libs/acme/backend/src"
       ],
       "@/*": [
-        "libs/task-manager/backend/src/*"
+        "libs/acme/backend/src/*"
       ],
       "@test/*": [
-        "libs/task-manager/backend/test/helper/*"
+        "libs/acme/backend/test/helper/*"
       ]
     }
   },
@@ -150,7 +113,7 @@ exports[`Library Generator: Backend libs/task-manager/backend/tsconfig.json shou
 }"
 `;
 
-exports[`Library Generator: Backend libs/task-manager/backend/tsconfig.test.json should match snapshot 1`] = `
+exports[`Library Generator: Backend libs/acme/backend/tsconfig.test.json should match snapshot 1`] = `
 "{
   "extends": "./tsconfig.json",
   "compilerOptions": {
@@ -183,8 +146,8 @@ exports[`Library Generator: Backend tsconfig.base.json should match snapshot 1`]
 "{
   "compilerOptions": {
     "paths": {
-      "@testcompany/task-manager-backend": [
-        "libs/task-manager/backend/src/index.ts"
+      "@testcompany/acme-backend": [
+        "libs/acme/backend/src/index.ts"
       ]
     }
   }

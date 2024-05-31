@@ -1,0 +1,3 @@
+import {defineProjectStorybookConfig} from "<%= project.relative.dotWorkspace %>/storybook/main.preset";
+
+export default defineProjectStorybookConfig('<%= project.root %>');

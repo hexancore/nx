@@ -11,5 +11,5 @@
     "jest.config.ts",
     "test/**/*.ts",
     "src/**/*.d.ts"
-  ]
+, "src/generators/library/files/frontend/src/vue-shims.d.ts__tmpl__"  ]
 }

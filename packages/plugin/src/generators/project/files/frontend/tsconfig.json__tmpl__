@@ -13,16 +13,18 @@
     "isolatedModules": true,
     "types": ["vite/client", "vitest", "@intlify/unplugin-vue-i18n/messages"],
     "noEmit": true,
-    "lib": ["ESNext", "DOM"],
+    "lib": ["ES2022", "DOM"],
     "skipLibCheck": true,
 
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "paths": {
+    <%_ if (project.type === 'library') { _%>
       "<%= project.importName %>": [
         "<%= project.root %>/src/index.ts"
       ],
+    <%_ } _%>
       "@": [
         "<%= project.root %>/src"
       ],
@@ -42,6 +44,9 @@
     },
     {
       "path": "./tsconfig.test.json"
+    },
+    {
+      "path": "./tsconfig.storybook.json"
     }
   ]
 }

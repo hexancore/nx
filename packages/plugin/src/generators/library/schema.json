@@ -1,34 +1,26 @@
 {
-  "$schema": "https://json-schema.org/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/output/schema",
   "$id": "Library",
   "title": "",
   "type": "object",
   "properties": {
-    "name": {
-      "type": "string",
-      "description": "",
-      "$default": {
-        "$source": "argv",
-        "index": 0
-      },
-      "x-prompt": "What name would you like to use?"
-    },
     "directory": {
       "type": "string",
-      "description": "A directory where the lib is placed.",
+      "description": "A directory where the library is placed in `apps/`. Project name will be directory with replaced '/'",
+      "x-prompt": "Library project directory in `apps/`",
       "x-priority": "important",
       "$default": {
         "$source": "argv",
         "index": 0
-      },
+      }
     },
     "type": {
       "description": "The library type.",
       "type": "string",
-      "enum": ["backend", "shared"],
-      "x-prompt": "Which library type would you like to use ? Choose 'none' to skip build setup.",
+      "enum": ["backend", "shared", "frontend"],
+      "x-prompt": "Which library type would you like to use ?",
       "x-priority": "important"
     }
   },
-  "required": ["name", "type"]
+  "required": ["directory", "type"]
 }

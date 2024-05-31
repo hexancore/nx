@@ -8,10 +8,6 @@ import { ApplicationGeneratorSchema } from './schema';
 
 export async function applicationGenerator(tree: Tree, options: ApplicationGeneratorSchema): Promise<void> {
 
-  if (options.type === 'frontend') {
-    throw new Error('Not supported yet');
-  }
-
   const helper = new HcNxHelper(tree);
   const project: ProjectMeta = helper.project.addApplication(options.directory, options.type);
 

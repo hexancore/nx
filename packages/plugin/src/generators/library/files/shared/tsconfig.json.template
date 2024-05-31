@@ -1,5 +1,5 @@
 {
-  "extends": "<%= project.workspaceRootRelative %>tsconfig.base.json",
+  "extends": "<%= project.relative.workspaceRoot %>/tsconfig.base.json",
   "compilerOptions": {
     "moduleResolution": "Node16",
     "module": "Node16",

@@ -1,9 +1,2 @@
 # <%= project.name %>
 
-## Building
-
-Run `nx build <%= project.name %>` to build the application.
-
-## Running tests
-
-Run `nx test <%= project.name %>` to execute the tests.

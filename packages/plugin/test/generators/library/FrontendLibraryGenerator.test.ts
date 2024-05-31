@@ -4,7 +4,7 @@ import { libraryGenerator } from '../../../src/generators/library/libraryGenerat
 import { LibraryGeneratorSchema } from '../../../src/generators/library/schema';
 import { createEmptyNxTree, exceptOnlyFilesFromListExistInWorkspace, exceptWorkspaceFileMatchSnapshot } from '../../helper/functions';
 
-describe.skip('Library Generator: Frontend', () => {
+describe('Library Generator: Frontend', () => {
   let tree: Tree;
   const type = 'frontend';
   const projectDirectory = `task-manager/${type}`;
@@ -24,6 +24,10 @@ describe.skip('Library Generator: Frontend', () => {
     'tsconfig.test.json',
     'tsconfig.build.json',
     'vite.config.ts',
+    '.storybook/main.ts',
+    '.storybook/preview.ts',
+    'tsconfig.storybook.json',
+    'src/vue-shims.d.ts'
   ].map(f => `${projectRoot}/` + f);
 
   const expectedWorkspaceFilesToMatchSnapshots = [

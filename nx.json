@@ -13,49 +13,56 @@
       "default",
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/eslint.config.js",
-      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
-      "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/src/test-setup.[jt]s",
-      "!{projectRoot}/test-setup.[jt]s"
+      "!{projectRoot}/test/**/?(*.)+(test).ts?(x)?(.snap)",
+      "!{projectRoot}/tsconfig.test.json",
+      "!{projectRoot}/jest.config.ts"
     ],
     "sharedGlobals": []
   },
   "targetDefaults": {
-    "lint": {
-      "inputs": [
-        "default",
-        "{projectRoot}/**/*.ts",
-        "{workspaceRoot}/.eslintrc.json",
-        "{workspaceRoot}/.eslintignore"
-      ],
-      "cache": true
-    },
-    "@nx/js:tsc": {
-      "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
-    },
     "@nx/eslint:lint": {
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json", "{workspaceRoot}/.eslintignore"],
       "cache": true,
-      "inputs": [
-        "default",
-        "{workspaceRoot}/.eslintrc.json",
-        "{workspaceRoot}/.eslintignore"
-      ]
+      "options": {
+        "lintFilePatterns": ["{projectRoot}/**/*.ts", "{projectRoot}/package.json"]
+      },
+      "configurations": {
+        "fix": {
+          "fix": true,
+          "cache": false
+        }
+      }
     },
     "@nx/jest:jest": {
       "cache": true,
+      "outputs": ["{options.outputFile}"],
       "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
       "options": {
-        "passWithNoTests": true,
-        "runInBand": true
+        "jestConfig": "{projectRoot}/jest.config.ts",
+        "runInBand": true,
+        "passWithNoTests": true
       },
       "configurations": {
+        "watch": {
+          "watch": true
+        },
         "ci": {
           "ci": true,
           "codeCoverage": true
+        },
+        "updateSnapshot": {
+          "updateSnapshot": true
         }
+      }
+    },
+    "@nx/js:tsc": {
+      "inputs": ["production", "^production"],
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": ["^build", "test"],
+      "cache": true,
+      "options": {
+        "outputPath": "dist/{projectRoot}",
+        "tsConfig": "{projectRoot}/tsconfig.build.json"
       }
     }
   },

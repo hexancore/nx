@@ -1,12 +1,9 @@
-import { defineConfig } from 'vitest/config'
+import { defineLibProjectViteConfig } from "<%= project.relative.dotWorkspace %>/vite/vite.preset";
 
-export default defineConfig({
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    include: ['test/**/*.test.ts'],
-    alias: {
-      '@/': new URL('./src/', import.meta.url).pathname,
-    },
-  },
-});
+const project = {
+  workspaceRootRelative: '<%= project.relative.workspaceRoot %>',
+  root: '<%= project.root %>',
+  name: '<%= project.name %>'
+};
+
+export default defineLibProjectViteConfig(__dirname, project);
