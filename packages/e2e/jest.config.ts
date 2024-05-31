@@ -9,6 +9,6 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/packages/e2e',
-  globalSetup: '<rootDir>/src/helper/startLocalRegistry.ts',
-  globalTeardown: '<rootDir>/src/helper/stopLocalRegistry.ts',
+  globalSetup: '<rootDir>/src/helper/globalSetup.ts',
+  globalTeardown: '<rootDir>/src/helper/globalTeardown.ts',
 };

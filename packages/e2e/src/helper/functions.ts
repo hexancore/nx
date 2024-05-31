@@ -2,7 +2,17 @@ import { execSync } from 'child_process';
 import { join, dirname } from 'path';
 import { existsSync, mkdirSync, rmSync } from 'fs';
 
-export function createTestWorkspace(name: string): string {
+export function getTestWorkspaceRoot(): string {
+  const root = process.env['TEST_WORKSPACE_ROOT'] ?? null;
+
+  if (!root) {
+    throw new Error('Empty env[TEST_WORKSPACE_ROOT]');
+  }
+
+  return root;
+}
+
+export function createTestWorkspace(name = 'test-workspace'): string {
   process.env['HUSKY'] = '0';
 
   const cwd = process.cwd();
@@ -13,6 +23,8 @@ export function createTestWorkspace(name: string): string {
     rmSync(workspaceRoot, {
       recursive: true,
       force: true,
+      maxRetries: 3,
+      retryDelay: 3 * 1000,
     });
   }
 
@@ -42,6 +54,6 @@ export function execNx(workspaceRoot: string, command: string): void {
     cwd: workspaceRoot,
     stdio: 'inherit',
     env: process.env,
-    timeout: 3*60*1000
+    timeout: 3 * 60 * 1000
   });
 }

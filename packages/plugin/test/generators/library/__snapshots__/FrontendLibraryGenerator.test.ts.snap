@@ -1,0 +1,229 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Library Generator: Frontend libs/task-manager/frontend/.eslintrc.json should match snapshot 1`] = `
+"{
+  "extends": [
+    "plugin:vue/vue3-essential",
+    "eslint:recommended",
+    "@vue/eslint-config-typescript",
+    "@vue/eslint-config-prettier/skip-formatting",
+    "../../../.eslintrc.json"
+  ],
+  "ignorePatterns": ["!**/*"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx", "*.vue"],
+      "rules": {
+        "vue/multi-word-component-names": "off"
+      }
+    }
+  ]
+}
+"
+`;
+
+exports[`Library Generator: Frontend libs/task-manager/frontend/.storybook/main.ts should match snapshot 1`] = `
+"import {defineProjectStorybookConfig} from "../../../.workspace/storybook/main.preset";
+
+export default defineProjectStorybookConfig('libs/task-manager/frontend');
+"
+`;
+
+exports[`Library Generator: Frontend libs/task-manager/frontend/.storybook/preview.ts should match snapshot 1`] = `"export const tags = ["autodocs"];"`;
+
+exports[`Library Generator: Frontend libs/task-manager/frontend/README.md should match snapshot 1`] = `
+"# task-manager-frontend
+
+
+"
+`;
+
+exports[`Library Generator: Frontend libs/task-manager/frontend/package.json should match snapshot 1`] = `
+"{
+  "name": "@testcompany/task-manager-frontend",
+  "type": "commonjs",
+  "private": true,
+  "dependencies": {
+    "tslib": "2.6.2"
+  },
+  "main": "./src/index.mjs",
+  "types": "./src/index.d.ts",
+  "sideEffects": [
+    "**/*.css"
+  ]
+}
+"
+`;
+
+exports[`Library Generator: Frontend libs/task-manager/frontend/project.json should match snapshot 1`] = `
+"{
+  "name": "task-manager-frontend",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "{projectRoot}/src",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/vite:test"
+    },
+    "build": {
+      "executor": "@nx/vite:build"
+    },
+    "storybook": {
+      "executor": "@nx/storybook:storybook"
+    },
+    "storybook-test": {
+      "executor": "nx:run-commands"
+    },
+    "storybook-build": {
+      "executor": "@nx/storybook:build"
+    },
+    "storybook-static": {
+      "executor": "@nx/web:file-server"
+    }
+  }
+}
+"
+`;
+
+exports[`Library Generator: Frontend libs/task-manager/frontend/src/vue-shims.d.ts should match snapshot 1`] = `
+"declare module '*.vue' {
+  import { defineComponent } from 'vue';
+  const component: ReturnType<typeof defineComponent>;
+  export default component;
+}
+"
+`;
+
+exports[`Library Generator: Frontend libs/task-manager/frontend/tsconfig.build.json should match snapshot 1`] = `
+"{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../dist/out-tsc",
+    "types": ["vite/client"]
+  },
+  "exclude": [
+    "**/*.stories.ts"
+  ],
+  "include": ["src/**/*.ts","src/**/*.tsx", "src/**/*.vue"]
+}
+"
+`;
+
+exports[`Library Generator: Frontend libs/task-manager/frontend/tsconfig.json should match snapshot 1`] = `
+"{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": false,
+    "useDefineForClassFields": true,
+    "isolatedModules": true,
+    "types": ["vite/client", "vitest", "@intlify/unplugin-vue-i18n/messages"],
+    "noEmit": true,
+    "lib": ["ES2022", "DOM"],
+    "skipLibCheck": true,
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "paths": {
+      "@testcompany/task-manager-frontend": [
+        "libs/task-manager/frontend/src/index.ts"
+      ],
+      "@": [
+        "libs/task-manager/frontend/src"
+      ],
+      "@/*": [
+        "libs/task-manager/frontend/src/*"
+      ],
+      "@test/*": [
+        "libs/task-manager/frontend/test/helper/*"
+      ]
+    }
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.build.json"
+    },
+    {
+      "path": "./tsconfig.test.json"
+    },
+    {
+      "path": "./tsconfig.storybook.json"
+    }
+  ]
+}
+"
+`;
+
+exports[`Library Generator: Frontend libs/task-manager/frontend/tsconfig.storybook.json should match snapshot 1`] = `
+"{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "emitDecoratorMetadata": true
+  },
+  "include": [
+    "src/**/*.stories.ts",
+    "src/**/*.stories.tsx",
+    ".storybook/*.ts"
+  ]
+}
+"
+`;
+
+exports[`Library Generator: Frontend libs/task-manager/frontend/tsconfig.test.json should match snapshot 1`] = `
+"{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../dist/out-tsc",
+    "types": ["vitest/globals", "vitest/importMeta", "vite/client", "node", "vitest"]
+  },
+  "include": ["vite.config.ts", "test/**/*.ts", "test/**/*.tsx"]
+}
+"
+`;
+
+exports[`Library Generator: Frontend libs/task-manager/frontend/vite.config.ts should match snapshot 1`] = `
+"import { defineLibProjectViteConfig } from "../../../.workspace/vite/vite.preset";
+
+const project = {
+  workspaceRootRelative: '../../..',
+  root: 'libs/task-manager/frontend',
+  name: 'task-manager-frontend'
+};
+
+export default defineLibProjectViteConfig(__dirname, project);
+"
+`;
+
+exports[`Library Generator: Frontend nx.json should match snapshot 1`] = `"{"affected":{"defaultBase":"main"},"targetDefaults":{"build":{"cache":true},"lint":{"cache":true}}}"`;
+
+exports[`Library Generator: Frontend package.json should match snapshot 1`] = `
+"{
+  "name": "@testcompany/source"
+}
+"
+`;
+
+exports[`Library Generator: Frontend tsconfig.base.json should match snapshot 1`] = `
+"{
+  "compilerOptions": {
+    "paths": {
+      "@testcompany/task-manager-frontend": [
+        "libs/task-manager/frontend/src/index.ts"
+      ]
+    }
+  }
+}
+"
+`;

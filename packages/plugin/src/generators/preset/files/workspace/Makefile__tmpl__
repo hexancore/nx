@@ -2,22 +2,17 @@ export ENV ?= dev
 export WORKSPACE = <%= workspace.name %>
 
 ## PATHS
-export BIN_ROOT_PATH = ./bin
+export BIN_ROOT_PATH = ./.workspace/bin
 export UTIL_ROOT_PATH = $(realpath $(BIN_ROOT_PATH)/util)
 export UTIL_PATH = $(UTIL_ROOT_PATH)/util.sh
-
-#ifndef CI
-## dev.env
-	#include dev.env
-	#export $(shell sed 's/=.*//' dev.env)
-#endif
 
 ## VERSION
 ifeq "$(ENV)" "dev"
   export VERSION = dev
 endif
 
-DC=docker compose -p $(WORKSPACE)
+export DOCKER_DIR = .workspace/docker
+DC=docker compose -p $(WORKSPACE) --project-directory .
 
 # Help target settings
 INFO = Showing targets for all of ENV(default: dev)
@@ -52,7 +47,7 @@ up:
 		chmod 777 ./tmp/docker
 		chmod 640 -R ./docker/ca/certs/db
 	fi
-	$(DC) -f docker-compose-dev.yaml --env-file ./docker/dev/.env up -d --wait --wait-timeout 5
+	$(DC) -f $(DOCKER_DIR)/dev/docker-compose-dev.yaml --env-file $(DOCKER_DIR)/dev/.env up -d --wait --wait-timeout 5
 	sleep 3
 
 ## Clear testing env
@@ -60,5 +55,6 @@ down:
 	$(DC) down -t 2
 
 build_dev_image:
-	DOCKER_BUILDKIT=1 docker build -t <%= workspace.name %>/dev:latest -f ./docker/app/Dockerfile --target=dev .
+	DOCKER_BUILDKIT=1 docker build -t <%= workspace.name %>/dev:latest -f $(DOCKER_DIR)/app/Dockerfile --target=dev .
+
 endif

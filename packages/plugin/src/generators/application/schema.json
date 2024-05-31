@@ -1,34 +1,26 @@
 {
-  "$schema": "https://json-schema.org/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/output/schema",
   "$id": "Application",
   "title": "",
   "type": "object",
   "properties": {
-    "name": {
-      "type": "string",
-      "description": "",
-      "$default": {
-        "$source": "argv",
-        "index": 0
-      },
-      "x-prompt": "What name would you like to use?"
-    },
     "directory": {
       "type": "string",
-      "description": "A directory where the application is placed.",
+      "description": "A directory where the application is placed in `apps/`. Project name pattern: 'acme/api' -> 'app-acme-api'",
+      "x-prompt": "Application project directory in `apps/`",
       "x-priority": "important",
       "$default": {
         "$source": "argv",
         "index": 0
-      },
+      }
     },
     "type": {
       "description": "The application type.",
       "type": "string",
-      "enum": ["backend"],
+      "enum": ["backend", "frontend"],
       "x-prompt": "Which application type would you like to use ?",
       "x-priority": "important"
     }
   },
-  "required": ["name", "type"]
+  "required": ["directory", "type"]
 }

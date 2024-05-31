@@ -1,6 +1,5 @@
 import { App } from "vue";
 import { createPinia } from "pinia";
-import { useMenuStore } from "../Router/MenuStore";
 
 export function PiniaCorePlugin(app: App) {
   const pinia = createPinia();

@@ -1,37 +1,60 @@
 {
   "root": true,
-  "plugins": ["@nx"],
+  "plugins": [
+    "@nx"
+  ],
   "overrides": [
     {
-      "files": ["*.json"],
+      "files": [
+        "*.json"
+      ],
       "parser": "jsonc-eslint-parser",
       "rules": {
         "@nx/dependency-checks": [
           "error",
           {
-            "buildTargets": ["build"],
+            "buildTargets": [
+              "build"
+            ],
             "includeTransitiveDependencies": true,
             "checkMissingDependencies": true,
             "checkObsoleteDependencies": true,
             "checkVersionMismatches": true,
-            "ignoredFiles": ["vite.config.ts"],
-            "ignoredDependencies": ["ts-jest", "tslib"]
+            "ignoredFiles": [
+              "vite.config.ts"
+            ],
+            "ignoredDependencies": [
+              "ts-jest",
+              "tslib",
+              "@vitejs/plugin-basic-ssl",
+              "vite",
+              "vue",
+              "@vitejs/plugin-vue",
+              "@rollup/plugin-node-resolve"
+            ]
           }
         ]
       }
     },
     {
-      "files": ["*.ts", "*.js", "*.vue"],
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.vue"
+      ],
+      "excludedFiles": ["**/.storybook/**/*", "**/vite.config.ts", "**/jest.config.ts"],
       "rules": {
         "@nx/enforce-module-boundaries": [
           "error",
           {
             "enforceBuildableLibDependency": true,
-            "allow": ["jest.preset.ts", "../../../jest.preset"],
+            "allow": [],
             "depConstraints": [
               {
                 "sourceTag": "*",
-                "onlyDependOnLibsWithTags": ["*"]
+                "onlyDependOnLibsWithTags": [
+                  "*"
+                ]
               }
             ]
           }
@@ -39,8 +62,12 @@
       }
     },
     {
-      "files": ["*.ts"],
-      "extends": ["plugin:@nx/typescript"],
+      "files": [
+        "*.ts"
+      ],
+      "extends": [
+        "plugin:@nx/typescript"
+      ],
       "rules": {
         "@typescript-eslint/no-explicit-any": "off",
         "no-empty-function": "off",
@@ -50,15 +77,21 @@
       }
     },
     {
-      "files": ["*.js"],
-      "extends": ["plugin:@nx/javascript"],
+      "files": [
+        "*.js"
+      ],
+      "extends": [
+        "plugin:@nx/javascript"
+      ],
       "rules": {
         "@typescript-eslint/no-extra-semi": "error",
         "no-extra-semi": "off"
       }
     },
     {
-      "files": ["*.test.ts"],
+      "files": [
+        "*.test.ts"
+      ],
       "env": {
         "jest": true
       },

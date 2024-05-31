@@ -7,7 +7,7 @@ import { createEmptyNxTree, exceptOnlyFilesFromListExistInWorkspace, exceptWorks
 describe('Library Generator: Backend', () => {
   let tree: Tree;
   const type = 'backend';
-  const projectDirectory = `task-manager/${type}`;
+  const projectDirectory = `acme/${type}`;
   const projectRoot = `libs/${projectDirectory}`;
   beforeAll(async () => {
     tree = createEmptyNxTree();

@@ -1,0 +1,240 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Application Generator: Frontend .prettierrc should match snapshot 1`] = `"{"singleQuote":true}"`;
+
+exports[`Application Generator: Frontend apps/acme/frontend/.env.development should match snapshot 1`] = `
+"VITE_APP_API_URL=http://localhost:25021
+"
+`;
+
+exports[`Application Generator: Frontend apps/acme/frontend/.eslintrc.json should match snapshot 1`] = `
+"{
+  "extends": [
+    "plugin:vue/vue3-essential",
+    "eslint:recommended",
+    "@vue/eslint-config-typescript",
+    "@vue/eslint-config-prettier/skip-formatting",
+    "../../../.eslintrc.json"
+  ],
+  "ignorePatterns": ["!**/*"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx", "*.vue"],
+      "rules": {
+        "vue/multi-word-component-names": "off"
+      }
+    }
+  ]
+}
+"
+`;
+
+exports[`Application Generator: Frontend apps/acme/frontend/.storybook/main.ts should match snapshot 1`] = `
+"import {defineProjectStorybookConfig} from "../../../.workspace/storybook/main.preset";
+
+export default defineProjectStorybookConfig('apps/acme/frontend');
+"
+`;
+
+exports[`Application Generator: Frontend apps/acme/frontend/.storybook/preview.ts should match snapshot 1`] = `"export const tags = ["autodocs"];"`;
+
+exports[`Application Generator: Frontend apps/acme/frontend/README.md should match snapshot 1`] = `
+"# app-acme-frontend
+
+"
+`;
+
+exports[`Application Generator: Frontend apps/acme/frontend/index.html should match snapshot 1`] = `
+"<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>app-pmt-web</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      window.process = window.process ?? { env: {} };
+    </script>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
+"
+`;
+
+exports[`Application Generator: Frontend apps/acme/frontend/project.json should match snapshot 1`] = `
+"{
+  "name": "app-acme-frontend",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "{projectRoot}/src",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/vite:test"
+    },
+    "build": {
+      "executor": "@nx/vite:build"
+    },
+    "preview": {
+      "executor": "@nx/vite:preview-server"
+    },
+    "storybook": {
+      "executor": "@nx/storybook:storybook"
+    },
+    "storybook-test": {
+      "executor": "nx:run-commands"
+    },
+    "storybook-build": {
+      "executor": "@nx/storybook:build"
+    },
+    "storybook-static": {
+      "executor": "@nx/web:file-server"
+    }
+  }
+}
+"
+`;
+
+exports[`Application Generator: Frontend apps/acme/frontend/src/main.ts should match snapshot 1`] = `
+"process = process ?? { env: {} };
+
+import { createApp } from 'vue';
+import App from './Core/Component/View/App.vue';
+
+import { PrimeVueCorePlugin } from './Core/Service/Plugin/PrimeVueCorePlugin';
+import router from './Core/Service/Router/Router';
+import { I18NCorePlugin } from './Core/Service/Plugin/I18NCorePlugin';
+import { PiniaCorePlugin } from './Core/Service/Plugin/PiniaCorePlugin';
+
+const app = createApp(App);
+
+PrimeVueCorePlugin(app);
+I18NCorePlugin(app);
+PiniaCorePlugin(app);
+app.use(router);
+
+app.mount('#root');
+"
+`;
+
+exports[`Application Generator: Frontend apps/acme/frontend/tsconfig.build.json should match snapshot 1`] = `
+"{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../dist/out-tsc",
+    "types": ["vite/client"]
+  },
+  "exclude": [
+    "**/*.stories.ts"
+  ],
+  "include": ["src/**/*.ts","src/**/*.tsx", "src/**/*.vue"]
+}
+"
+`;
+
+exports[`Application Generator: Frontend apps/acme/frontend/tsconfig.json should match snapshot 1`] = `
+"{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": false,
+    "useDefineForClassFields": true,
+    "isolatedModules": true,
+    "types": ["vite/client", "vitest", "@intlify/unplugin-vue-i18n/messages"],
+    "noEmit": true,
+    "lib": ["ES2022", "DOM"],
+    "skipLibCheck": true,
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "paths": {
+      "@": [
+        "apps/acme/frontend/src"
+      ],
+      "@/*": [
+        "apps/acme/frontend/src/*"
+      ],
+      "@test/*": [
+        "apps/acme/frontend/test/helper/*"
+      ]
+    }
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.build.json"
+    },
+    {
+      "path": "./tsconfig.test.json"
+    },
+    {
+      "path": "./tsconfig.storybook.json"
+    }
+  ]
+}
+"
+`;
+
+exports[`Application Generator: Frontend apps/acme/frontend/tsconfig.storybook.json should match snapshot 1`] = `
+"{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "emitDecoratorMetadata": true
+  },
+  "include": [
+    "src/**/*.stories.ts",
+    "src/**/*.stories.tsx",
+    ".storybook/*.ts"
+  ]
+}
+"
+`;
+
+exports[`Application Generator: Frontend apps/acme/frontend/tsconfig.test.json should match snapshot 1`] = `
+"{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../dist/out-tsc",
+    "types": ["vitest/globals", "vitest/importMeta", "vite/client", "node", "vitest"]
+  },
+  "include": ["vite.config.ts", "test/**/*.ts", "test/**/*.tsx"]
+}
+"
+`;
+
+exports[`Application Generator: Frontend apps/acme/frontend/vite.config.ts should match snapshot 1`] = `
+"import { defineAppProjectViteConfig } from "../../../.workspace/vite/vite.preset";
+
+const project = {
+  workspaceRootRelative: '../../..',
+  root: 'apps/acme/frontend',
+  name: 'app-acme-frontend'
+};
+
+export default defineAppProjectViteConfig(__dirname, project);
+"
+`;
+
+exports[`Application Generator: Frontend nx.json should match snapshot 1`] = `"{"affected":{"defaultBase":"main"},"targetDefaults":{"build":{"cache":true},"lint":{"cache":true}}}"`;
+
+exports[`Application Generator: Frontend package.json should match snapshot 1`] = `
+"{
+  "name": "@testcompany/source"
+}
+"
+`;
+
+exports[`Application Generator: Frontend tsconfig.base.json should match snapshot 1`] = `"{"compilerOptions":{"paths":{}}}"`;

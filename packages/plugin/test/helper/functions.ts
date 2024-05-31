@@ -20,3 +20,7 @@ export function exceptOnlyFilesFromListExistInWorkspace(tree: Tree, expected: st
   const diff = tree.listChanges().map(c => c.path).filter(x => !expected.includes(x));
   expect(diff).toEqual([]);
 }
+
+export function expectedFiles(prefix: string, files: string[]) {
+  return files.map((f) => prefix + f);
+}

@@ -1,22 +1,11 @@
-import { createTestWorkspace, execNx } from '../helper/functions';
+import { execNx, getTestWorkspaceRoot } from '../helper/functions';
 import { existsSync } from 'fs';
 import { join } from 'path';
 
 describe('Library', () => {
-  let workspaceRoot;
+  const workspaceRoot = getTestWorkspaceRoot();
 
-  beforeAll(() => {
-    workspaceRoot = createTestWorkspace('library-test');
-  });
-
-  afterAll(() => {
-    if (!workspaceRoot) {
-      return;
-    }
-    execNx(workspaceRoot, 'reset');
-  });
-
-  describe.each(['backend', 'shared'])('Library %s', (type) => {
+  describe.each(['backend', 'frontend', 'shared'])('Library %s', (type) => {
     beforeAll(() => {
       execNx(workspaceRoot, `g @hexancore/nx:lib acme/${type} --type ${type}`);
     });
@@ -28,7 +17,9 @@ describe('Library', () => {
     test('target build should pass', () => {
       execNx(workspaceRoot, `run acme-${type}:build`);
 
-      expect(existsSync(join(workspaceRoot, `dist/libs/acme/${type}/src/index.js`))).toBeTruthy();
+      const expectedIndex = type === 'frontend' ? 'index.mjs' : 'src/index.js';
+
+      expect(existsSync(join(workspaceRoot, `dist/libs/acme/${type}/${expectedIndex}`))).toBeTruthy();
     });
 
     test('target test should pass', () => {

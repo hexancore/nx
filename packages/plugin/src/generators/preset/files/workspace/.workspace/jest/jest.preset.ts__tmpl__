@@ -1,13 +1,19 @@
-import type { JestConfigWithTsJest } from 'ts-jest'
-import { pathsToModuleNameMapper } from 'ts-jest'
+import type { JestConfigWithTsJest } from 'ts-jest';
+import { pathsToModuleNameMapper } from 'ts-jest';
 import * as fs from 'fs';
 import * as path from 'path';
 
-function createJestConfig(projectDir: string): JestConfigWithTsJest {
+export interface ProjectMeta {
+  name: string;
+  workspaceRootRelative: string;
+  root: string;
+}
+
+export function defineProjectJestConfig(projectDir: string, project: ProjectMeta): JestConfigWithTsJest {
   const tsConfig = JSON.parse(fs.readFileSync(`${projectDir}/tsconfig.json`, 'utf-8'));
   const jestConfig: JestConfigWithTsJest = {
     extensionsToTreatAsEsm: ['.ts'],
-    displayName: path.basename(projectDir),
+    displayName: project.name,
     resolver: '@nx/jest/plugins/resolver',
     transform: {
       '^.+\\.m?[tj]sx?$': ['ts-jest', { tsconfig: `${projectDir}/tsconfig.test.json` }],
@@ -18,11 +24,10 @@ function createJestConfig(projectDir: string): JestConfigWithTsJest {
     testMatch: ["<rootDir>/test/**/*.test.ts"],
     setupFiles: [],
     setupFilesAfterEnv: ["jest-expect-message", "<rootDir>/test/config.ts"],
-    coverageDirectory: "./test/coverage",
+    coverageDirectory: `${project.workspaceRootRelative}/tmp/coverage/${project.name}`,
     testEnvironment: "node",
     transformIgnorePatterns: ["/node_modules/"]
-  }
+  };
+
   return jestConfig;
 }
-
-export default createJestConfig;

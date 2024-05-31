@@ -1,0 +1,47 @@
+import { PreRenderedAsset } from "rollup";
+
+export interface AssetOutputEntry {
+  output: string;
+  regex: RegExp;
+}
+
+interface ViteProjectAssetsBuildOptions {
+  assetsDir: string;
+  entryFileNames: string;
+  chunkFileNames: string;
+  assetFileNames: (info: PreRenderedAsset) => string;
+}
+
+export function defineProjectAssetsBuildOptions(assetTypes?: AssetOutputEntry[]): ViteProjectAssetsBuildOptions {
+  const assetsDir = "assets";
+  assetTypes = assetTypes ?? [];
+  assetTypes.push(...[
+    {
+      output: `${assetsDir}/img/[name]-[hash][extname]`,
+      regex: /\.(png|jpe?g|gif|svg|webp|avif)$/
+    },
+    {
+      regex: /\.css$/,
+      output: `${assetsDir}/css/[name]-[hash][extname]`
+    },
+    {
+      output: `${assetsDir}/js/[name]-[hash][extname]`,
+      regex: /\.js$/
+    }
+  ]);
+  return {
+    assetsDir,
+    entryFileNames: `${assetsDir}/js/[name]-[hash].js`,
+    chunkFileNames: `${assetsDir}/js/[name]-[hash]-chunk.js`,
+    assetFileNames: (info: PreRenderedAsset): string => {
+      if (info && info.name) {
+        const name = info.name as string;
+        const result = assetTypes.find(a => a.regex.test(name));
+        if (result) {
+          return result.output;
+        }
+      }
+      return `${assetsDir}/[name]-[hash][extname]`;
+    }
+  };
+}

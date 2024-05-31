@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Application Generator frontend apps/task-manager/api/.eslintrc.json should match snapshot 1`] = `
+exports[`Application Generator: Backend .prettierrc should match snapshot 1`] = `"{"singleQuote":true}"`;
+
+exports[`Application Generator: Backend apps/acme/backend/.eslintrc.json should match snapshot 1`] = `
 "{
   "extends": ["../../../.eslintrc.json"],
   "ignorePatterns": ["!**/*"]
@@ -9,95 +11,54 @@ exports[`Application Generator frontend apps/task-manager/api/.eslintrc.json sho
 "
 `;
 
-exports[`Application Generator frontend apps/task-manager/api/README.md should match snapshot 1`] = `
-"# app-task-manager-api
+exports[`Application Generator: Backend apps/acme/backend/README.md should match snapshot 1`] = `
+"# app-acme-backend
 
-## Building
-
-Run \`nx build app-task-manager-api\` to build the application.
-
-## Running tests
-
-Run \`nx test app-task-manager-api\` to execute the tests.
 "
 `;
 
-exports[`Application Generator frontend apps/task-manager/api/jest.config.ts should match snapshot 1`] = `
-"import createJestConfig from "../../../jest.preset";
+exports[`Application Generator: Backend apps/acme/backend/jest.config.ts should match snapshot 1`] = `
+"import { defineProjectJestConfig } from "../../../.workspace/jest/jest.preset";
 
-const jestConfig = createJestConfig(__dirname);
+const project = {
+  workspaceRootRelative: '../../..',
+  root: 'apps/acme/backend',
+  name: 'app-acme-backend'
+};
 
-export default jestConfig"
+export default defineProjectJestConfig(__dirname, project);"
 `;
 
-exports[`Application Generator frontend apps/task-manager/api/package.json should match snapshot 1`] = `
+exports[`Application Generator: Backend apps/acme/backend/package.json should match snapshot 1`] = `
 "{
-  "name": "@testcompany/app-task-manager-api",
+  "name": "@testcompany/app-acme-backend",
   "type": "commonjs",
   "private": true,
   "dependencies": {
     "tslib": "2.6.2"
   },
-  "main": "./src/index.js",
-  "types": "./src/index.d.ts"
+  "main": "./src/main.js"
 }
 "
 `;
 
-exports[`Application Generator frontend apps/task-manager/api/project.json should match snapshot 1`] = `
+exports[`Application Generator: Backend apps/acme/backend/project.json should match snapshot 1`] = `
 "{
-  "name": "app-task-manager-api",
+  "name": "app-acme-backend",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "{projectRoot}/src",
   "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
-      "options": {
-        "outputPath": "dist/{projectRoot}",
-        "main": "{projectRoot}/src/main.ts",
-        "tsConfig": "{projectRoot}/tsconfig.build.json"
-      }
-    },
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "options": {
-        "lintFilePatterns": [
-          "{projectRoot}/**/*.ts",
-          "{projectRoot}/package.json"
-        ]
-      }
-    },
-    "lint-fix": {
-      "executor": "@nx/eslint:lint",
-      "options": {
-        "lintFilePatterns": [
-          "{projectRoot}/**/*.ts",
-          "{projectRoot}/package.json"
-        ],
-        "fix": true
-      }
+      "executor": "@nx/eslint:lint"
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "defaultConfiguration": "test",
-      "options": {
-        "jestConfig": "{projectRoot}/jest.config.ts",
-        "runInBand": true,
-        "passWithNoTests": true
-      }
+      "executor": "@nx/jest:jest"
     },
-    "test-watch": {
-      "executor": "@nx/jest:jest",
-      "defaultConfiguration": "test",
+    "build": {
+      "executor": "@nx/js:tsc",
       "options": {
-        "jestConfig": "{projectRoot}/jest.config.ts",
-        "runInBand": true,
-        "passWithNoTests": true,
-        "watch": true
+        "main": "{projectRoot}/src/main.ts"
       }
     }
   }
@@ -105,9 +66,9 @@ exports[`Application Generator frontend apps/task-manager/api/project.json shoul
 "
 `;
 
-exports[`Application Generator frontend apps/task-manager/api/src/main.ts should match snapshot 1`] = `"export const EXAMPLE = 1;"`;
+exports[`Application Generator: Backend apps/acme/backend/src/main.ts should match snapshot 1`] = `"export const EXAMPLE = 1;"`;
 
-exports[`Application Generator frontend apps/task-manager/api/tsconfig.build.json should match snapshot 1`] = `
+exports[`Application Generator: Backend apps/acme/backend/tsconfig.build.json should match snapshot 1`] = `
 "{
   "extends": "./tsconfig.json",
   "compilerOptions": {
@@ -120,22 +81,21 @@ exports[`Application Generator frontend apps/task-manager/api/tsconfig.build.jso
 "
 `;
 
-exports[`Application Generator frontend apps/task-manager/api/tsconfig.json should match snapshot 1`] = `
+exports[`Application Generator: Backend apps/acme/backend/tsconfig.json should match snapshot 1`] = `
 "{
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
+    "moduleResolution": "Node16",
+    "module": "Node16",
     "paths": {
-      "@testcompany/app-task-manager-api": [
-        "apps/task-manager/api/src/index.ts"
-      ],
       "@": [
-        "apps/task-manager/api/src"
+        "apps/acme/backend/src"
       ],
       "@/*": [
-        "apps/task-manager/api/src/*"
+        "apps/acme/backend/src/*"
       ],
       "@test/*": [
-        "apps/task-manager/api/test/helper/*"
+        "apps/acme/backend/test/helper/*"
       ]
     }
   },
@@ -152,7 +112,7 @@ exports[`Application Generator frontend apps/task-manager/api/tsconfig.json shou
 }"
 `;
 
-exports[`Application Generator frontend apps/task-manager/api/tsconfig.test.json should match snapshot 1`] = `
+exports[`Application Generator: Backend apps/acme/backend/tsconfig.test.json should match snapshot 1`] = `
 "{
   "extends": "./tsconfig.json",
   "compilerOptions": {
@@ -172,13 +132,13 @@ exports[`Application Generator frontend apps/task-manager/api/tsconfig.test.json
 "
 `;
 
-exports[`Application Generator frontend nx.json should match snapshot 1`] = `"{"affected":{"defaultBase":"main"},"targetDefaults":{"build":{"cache":true},"lint":{"cache":true}}}"`;
+exports[`Application Generator: Backend nx.json should match snapshot 1`] = `"{"affected":{"defaultBase":"main"},"targetDefaults":{"build":{"cache":true},"lint":{"cache":true}}}"`;
 
-exports[`Application Generator frontend package.json should match snapshot 1`] = `
+exports[`Application Generator: Backend package.json should match snapshot 1`] = `
 "{
   "name": "@testcompany/source"
 }
 "
 `;
 
-exports[`Application Generator frontend tsconfig.base.json should match snapshot 1`] = `"{"compilerOptions":{"paths":{}}}"`;
+exports[`Application Generator: Backend tsconfig.base.json should match snapshot 1`] = `"{"compilerOptions":{"paths":{}}}"`;

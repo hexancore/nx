@@ -36,13 +36,13 @@ export class PresetPackageJsonGenerator {
   }
 
   private generateDeps(tree: Tree): void {
-    const deps = this.createDeps();
-    const devDeps = this.createDevDeps();
+    const deps = this.deps();
+    const devDeps = this.devDeps();
     removeDependenciesFromPackageJson(tree, ['@hexancore/nx'], []);
     addDependenciesToPackageJson(tree, deps, devDeps);
   }
 
-  private createDeps(): Record<string, string> {
+  private deps(): Record<string, string> {
     const hexancore = {
       '@hexancore/core': '0.14.*',
       '@hexancore/common': '0.13.*',
@@ -59,39 +59,42 @@ export class PresetPackageJsonGenerator {
     };
   }
 
-  private createDevDeps(): Record<string, string> {
+  private devDeps(): Record<string, string> {
     return {
-      ...this.createHexancoreDevDeps(),
-      ...this.createNxDevDeps(),
-      ...this.createFrontendDevDeps(),
-      ...this.createJestDevDeps(),
-      ...this.createEslintDevDeps(),
-      ...this.createEssentialsDevDeps()
+      ...this.hexancoreDevDeps(),
+      ...this.nxDevDeps(),
+      ...this.frontendDevDeps(),
+      ...this.jestDevDeps(),
+      ...this.eslintDevDeps(),
+      ...this.essentialsDevDeps()
     };
   }
 
-  private createNxDevDeps(): Record<string, string> {
+  private nxDevDeps(): Record<string, string> {
     return {
-      "@nx/devkit": this.nxVersion,
       "@nx/esbuild": this.nxVersion,
       "@nx/eslint-plugin": this.nxVersion,
       "@nx/jest": this.nxVersion,
       "@nx/js": this.nxVersion,
+      "@nx/vite": this.nxVersion,
+      "@nx/vue": this.nxVersion,
       "@nx/linter": this.nxVersion,
-      "@nx/plugin": this.nxVersion,
+      "@nx/storybook": this.nxVersion,
+      "@nx/web": this.nxVersion,
     };
   }
 
-  private createHexancoreDevDeps(): Record<string, string> {
+  private hexancoreDevDeps(): Record<string, string> {
     return {
       "@hexancore/nx": this.hcNxPluginVersion,
       "@hexancore/mocker": "^1.1.2",
     };
   }
 
-  private createFrontendDevDeps(): Record<string, string> {
+  private frontendDevDeps(): Record<string, string> {
     const vue = {
       "@vue/eslint-config-typescript": "^11.0.3",
+      "@vue/eslint-config-prettier": "^7.1.0",
       "@vue/test-utils": "^2.4.5",
       "@vue/tsconfig": "^0.4.0",
       "vue": "^3.4.25",
@@ -123,6 +126,8 @@ export class PresetPackageJsonGenerator {
       "@babel/core": "^7.24.4",
       "@babel/plugin-transform-modules-commonjs": "^7.24.1",
       "@babel/preset-env": "^7.24.4",
+      "vite-plugin-lib-inject-css": "2.1.1",
+      "vite-plugin-dts": "3.9.1",
     };
 
     const primevue = {
@@ -144,11 +149,25 @@ export class PresetPackageJsonGenerator {
       ...vueI18n,
       ...vite,
       ...primevue,
-      ...style
+      ...style,
+      ...this.storybookDevDeps()
     };
   }
 
-  public createEslintDevDeps(): Record<string, string> {
+  private storybookDevDeps(): Record<string, string> {
+    const storybookVersion = "^8.1.5";
+    return {
+      "@storybook/addon-essentials": storybookVersion,
+      "@storybook/addon-interactions": storybookVersion,
+      "@storybook/core-server": storybookVersion,
+      "@storybook/test": storybookVersion,
+      "@storybook/vue3": storybookVersion,
+      "@storybook/vue3-vite": storybookVersion,
+      "storybook": storybookVersion,
+    };
+  }
+
+  private eslintDevDeps(): Record<string, string> {
     return {
       "eslint": "8.57.0",
       "eslint-plugin-import": "^2.29.1",
@@ -158,7 +177,7 @@ export class PresetPackageJsonGenerator {
     };
   }
 
-  public createJestDevDeps(): Record<string, string> {
+  private jestDevDeps(): Record<string, string> {
     return {
       "happy-dom": "^14.11.0",
       "jest": "^29.7.0",
@@ -175,7 +194,7 @@ export class PresetPackageJsonGenerator {
     };
   }
 
-  public createEssentialsDevDeps(): Record<string, string> {
+  public essentialsDevDeps(): Record<string, string> {
     return {
       "tsconfig": "^7.0.0",
       "typescript": "5.4.5",
@@ -185,6 +204,7 @@ export class PresetPackageJsonGenerator {
       "@types/node": "20.12.12",
       "@nestjs/testing": "^10.3.8",
       "husky": "^9.0.11",
+      "prettier": "3.2.5"
     };
   }
 }

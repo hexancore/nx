@@ -5,7 +5,10 @@ import type { LibraryType } from "../generators/library/LibraryType";
 export interface ProjectMeta<Subtype extends ApplicationType | LibraryType = ApplicationType | LibraryType> {
   name: string;
   root: string;
-  workspaceRootRelative: string,
+  relative: {
+    workspaceRoot: string,
+    dotWorkspace: string;
+  },
   importName: string;
   type: ProjectType;
   subtype: Subtype;

@@ -3,10 +3,10 @@ process = process ?? { env: {} };
 import { createApp } from 'vue';
 import App from './Core/Component/View/App.vue';
 
-import { PrimeVueCorePlugin } from './Core/Service/Plugin/PrimeVueCorePlugin.ts';
-import router from './Core/Service/Router/Router.ts';
-import { I18NCorePlugin } from './Core/Service/Plugin/I18NCorePlugin.ts';
-import { PiniaCorePlugin } from './Core/Service/Plugin/PiniaCorePlugin.ts';
+import { PrimeVueCorePlugin } from './Core/Service/Plugin/PrimeVueCorePlugin';
+import router from './Core/Service/Router/Router';
+import { I18NCorePlugin } from './Core/Service/Plugin/I18NCorePlugin';
+import { PiniaCorePlugin } from './Core/Service/Plugin/PiniaCorePlugin';
 
 const app = createApp(App);
 

@@ -21,20 +21,36 @@ export class ProjectPackageJsonGenerator<Opts extends ProjectPackageJsonGenerato
   }
 
   public apply(tree: Tree): void {
-    writeJson(tree, this.packageJsonPath, {
+    const packageJson = {
       name: this.options.project.importName,
       type: "commonjs",
       private: true,
       ...this.generateDeps(),
       ...this.generateExports()
-    });
+    };
+
+    if (this.options.project.type === 'library' && this.options.project.subtype === 'frontend') {
+      packageJson['sideEffects'] = this.generateSideEffects();
+    }
+
+    writeJson(tree, this.packageJsonPath, packageJson);
   }
 
   private generateExports(): Record<string, any> {
-    return {
-      "main": "./src/index.js",
-      "types": "./src/index.d.ts",
-    };
+    if (this.options.project.type === 'library') {
+      return {
+        "main": this.options.project.subtype === 'frontend' ? "./src/index.mjs" : "./src/index.js",
+        "types": "./src/index.d.ts",
+      };
+    }
+
+    if (this.options.project.type === 'application' && this.options.project.subtype === 'backend') {
+      return {
+        "main": "./src/main.js"
+      };
+    }
+
+    return {};
   }
 
   private generateDeps(): Record<string, any> {
@@ -43,5 +59,11 @@ export class ProjectPackageJsonGenerator<Opts extends ProjectPackageJsonGenerato
         'tslib': '2.6.2'
       }
     };
+  }
+
+  private generateSideEffects() {
+    return [
+      "**/*.css"
+    ];
   }
 }

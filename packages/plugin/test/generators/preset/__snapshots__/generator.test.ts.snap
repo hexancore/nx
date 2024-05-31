@@ -26,12 +26,457 @@ auto-install-peers=true
 "
 `;
 
+exports[`preset generator .workspace/docker/app/Dockerfile should match snapshot 1`] = `
+"# pnpm https://github.com/moby/moby/issues/40449#issuecomment-1758956399
+ARG NODE_IMAGE=node:22-alpine3.18
+ARG PM2_VERSION=5.3.1
+ARG USER_UID=1000
+
+FROM "$NODE_IMAGE" as deps
+
+ENV NODE_ENV=production
+ENV PNPM_HOME="/app/.pnpm-store"
+ENV PATH="$PNPM_HOME:$PATH"
+
+RUN mkdir -p /app/.pnpm-store && chown -R node:node /app && chmod -R 777 /app && corepack enable && pnpm config set store-dir "$PNPM_HOME"
+
+USER node
+WORKDIR /app
+
+COPY --chown=node:node ./pnpm-lock.yaml ./
+RUN --mount=type=cache,target=/app/.pnpm-store,uid=\${USER_UID},gid=\${USER_UID} pnpm fetch --prod --ignore-scripts
+
+COPY --chown=node:node ./pnpm-lock.yaml ./package.json ./prod/
+RUN --mount=type=cache,ro,target=/app/.pnpm-store,uid=\${USER_UID},gid=\${USER_UID} cd prod && pnpm install --prod --offline --frozen-lockfile --ignore-scripts
+
+##########################
+# DEV container tool stage
+FROM deps as dev
+RUN --mount=type=cache,target=/app/.pnpm-store,uid=\${USER_UID},gid=\${USER_UID} pnpm fetch --dev --ignore-scripts
+
+COPY --chown=node:node ./package.json ./
+RUN --mount=type=cache,ro,target=/app/.pnpm-store,uid=\${USER_UID},gid=\${USER_UID} pnpm install --prod=false --offline --frozen-lockfile --ignore-scripts
+
+EXPOSE 3000
+
+CMD ["sleep", "1000"]
+
+#######################
+# API application stage
+FROM $NODE_IMAGE as app_api
+ARG APP_ID
+
+RUN mkdir /app && chown node:node /app && chmod 770 /app && npm i -g pm2@\${PM2_VERSION}
+WORKDIR /app
+
+RUN --mount=type=bind,from=deps,source=/app,target=/tmp/deps cp -R -p /tmp/deps/prod/* ./
+
+COPY --chown=node:node ./dist/apps/\${APP_ID} ./apps/\${APP_ID}
+COPY --chown=node:node ./dist/libs ./libs
+COPY --chown=node:node ./docker/app/pm2.config.cjs ./pm2.config.cjs
+
+USER node
+ENV NODE_ENV=production
+EXPOSE 3000
+RUN ln -s apps/\${APP_ID}/src/index.js entrypoint
+
+CMD ["pm2-runtime", "--json", "pm2.config.cjs"]
+"
+`;
+
+exports[`preset generator .workspace/docker/app/pm2.config.cjs should match snapshot 1`] = `
+"var fs = require('fs');
+const configPath = process.env["PM2_CONFIG_PATH"] ?? './config/pm2.config.json';
+const config = JSON.parse(fs.readFileSync(configPath, { encoding: 'utf8' }));
+module.exports = {
+  apps: [
+    {
+      script: './entrypoint',
+      ...config,
+    },
+  ],
+};
+"
+`;
+
+exports[`preset generator .workspace/docker/dev/.env should match snapshot 1`] = `
+"WORKSPACE=test-workspace
+
+HOST_DATA_DIR=./tmp/docker
+HOST_CONFIG_DIR=./docker/dev
+HOST_CA_DIR=./docker/dev/ca
+HOST_CERTS_DIR=./docker/dev/ca/certs
+HOST_CA_CRT=./docker/dev/ca/ca.crt
+
+# SERVICES
+
+# Redis
+REDIS_HOST_PORT=25010
+REDIS_PASSWORD=testredis
+
+# DB
+DB_HOST_PORT=25011
+
+"
+`;
+
+exports[`preset generator .workspace/docker/dev/docker-compose-dev.yaml should match snapshot 1`] = `
+"version: '3.6'
+services:
+  redis:
+    image: bitnami/redis:7.2
+    container_name: \${PROJECT}-redis
+    restart: always
+    environment:
+      - ALLOW_EMPTY_PASSWORD=no
+      - REDIS_AOF_ENABLED=no
+      - REDIS_PASSWORD=\${REDIS_PASSWORD}
+      - REDIS_ACLFILE=/bitnami/redis/config/users.acl
+    ports:
+      - \${REDIS_HOST_PORT}:6379
+    volumes:
+      - \${HOST_CONFIG_DIR}/redis:/bitnami/redis/config
+    tmpfs:
+      - /bitnami/redis/data:size=64M
+  db:
+    image: bitnami/postgresql:16.2.0
+    container_name: \${PROJECT}-db
+    restart: always
+    environment:
+      - POSTGRESQL_POSTGRES_PASSWORD=testroot
+      - POSTGRESQL_DATABASE=\${PROJECT}
+      - POSTGRESQL_USERNAME=\${PROJECT}
+      - POSTGRESQL_PASSWORD=test
+      - POSTGRESQL_ENABLE_TLS=yes
+      - POSTGRESQL_TLS_CERT_FILE=/opt/bitnami/postgresql/certs/db.crt
+      - POSTGRESQL_TLS_KEY_FILE=/opt/bitnami/postgresql/certs/db.key
+      - POSTGRESQL_TLS_CA_FILE=/opt/bitnami/postgresql/certs/ca.crt
+    volumes:
+      - \${HOST_CERTS_DIR}/db/db.crt:/opt/bitnami/postgresql/certs/db.crt
+      - \${HOST_CERTS_DIR}/db/db.key:/opt/bitnami/postgresql/certs/db.key
+      - \${HOST_CA_CRT}:/opt/bitnami/postgresql/certs/ca.crt
+    mem_limit: 512M
+    tmpfs:
+      - /tmp:size=256M
+    ports:
+      - \${DB_HOST_PORT}:5432
+"
+`;
+
+exports[`preset generator .workspace/jest/jest.preset.ts should match snapshot 1`] = `
+"import type { JestConfigWithTsJest } from 'ts-jest';
+import { pathsToModuleNameMapper } from 'ts-jest';
+import * as fs from 'fs';
+import * as path from 'path';
+
+export interface ProjectMeta {
+  name: string;
+  workspaceRootRelative: string;
+  root: string;
+}
+
+export function defineProjectJestConfig(projectDir: string, project: ProjectMeta): JestConfigWithTsJest {
+  const tsConfig = JSON.parse(fs.readFileSync(\`\${projectDir}/tsconfig.json\`, 'utf-8'));
+  const jestConfig: JestConfigWithTsJest = {
+    extensionsToTreatAsEsm: ['.ts'],
+    displayName: project.name,
+    resolver: '@nx/jest/plugins/resolver',
+    transform: {
+      '^.+\\\\.m?[tj]sx?$': ['ts-jest', { tsconfig: \`\${projectDir}/tsconfig.test.json\` }],
+    },
+    runner: "groups",
+    moduleFileExtensions: ["js", "json", "ts"],
+    moduleNameMapper: pathsToModuleNameMapper(tsConfig.compilerOptions.paths),
+    testMatch: ["<rootDir>/test/**/*.test.ts"],
+    setupFiles: [],
+    setupFilesAfterEnv: ["jest-expect-message", "<rootDir>/test/config.ts"],
+    coverageDirectory: \`\${project.workspaceRootRelative}/tmp/coverage/\${project.name}\`,
+    testEnvironment: "node",
+    transformIgnorePatterns: ["/node_modules/"]
+  };
+
+  return jestConfig;
+}
+"
+`;
+
+exports[`preset generator .workspace/storybook/storybook.preset.ts should match snapshot 1`] = `
+"import { StorybookConfig } from '@storybook/vue3-vite';
+
+export function defineProjectStorybookConfig(projectRoot: string): StorybookConfig {
+  return {
+    stories: ['../src/**/*.stories.@(ts|tsx)'],
+    addons: ['@storybook/addon-essentials', '@storybook/addon-interactions'],
+
+    core: {
+      disableTelemetry: true,
+    },
+
+    framework: {
+      name: '@storybook/vue3-vite',
+      options: {
+
+        builder: {
+          viteConfigPath: \`\${projectRoot}/vite.config.ts\`,
+        },
+      },
+    },
+
+    docs: {},
+  };
+}
+
+// To customize your Vite configuration you can use the viteFinal field.
+// Check https://storybook.js.org/docs/react/builders/vite#configuration
+// and https://nx.dev/recipes/storybook/custom-builder-configs
+"
+`;
+
+exports[`preset generator .workspace/vite/assets.ts should match snapshot 1`] = `
+"import { PreRenderedAsset } from "rollup";
+
+export interface AssetOutputEntry {
+  output: string;
+  regex: RegExp;
+}
+
+interface ViteProjectAssetsBuildOptions {
+  assetsDir: string;
+  entryFileNames: string;
+  chunkFileNames: string;
+  assetFileNames: (info: PreRenderedAsset) => string;
+}
+
+export function defineProjectAssetsBuildOptions(assetTypes?: AssetOutputEntry[]): ViteProjectAssetsBuildOptions {
+  const assetsDir = "assets";
+  assetTypes = assetTypes ?? [];
+  assetTypes.push(...[
+    {
+      output: \`\${assetsDir}/img/[name]-[hash][extname]\`,
+      regex: /\\.(png|jpe?g|gif|svg|webp|avif)$/
+    },
+    {
+      regex: /\\.css$/,
+      output: \`\${assetsDir}/css/[name]-[hash][extname]\`
+    },
+    {
+      output: \`\${assetsDir}/js/[name]-[hash][extname]\`,
+      regex: /\\.js$/
+    }
+  ]);
+  return {
+    assetsDir,
+    entryFileNames: \`\${assetsDir}/js/[name]-[hash].js\`,
+    chunkFileNames: \`\${assetsDir}/js/[name]-[hash]-chunk.js\`,
+    assetFileNames: (info: PreRenderedAsset): string => {
+      if (info && info.name) {
+        const name = info.name as string;
+        const result = assetTypes.find(a => a.regex.test(name));
+        if (result) {
+          return result.output;
+        }
+      }
+      return \`\${assetsDir}/[name]-[hash][extname]\`;
+    }
+  };
+}"
+`;
+
+exports[`preset generator .workspace/vite/vite.preset.ts should match snapshot 1`] = `
+"/// <reference types='vitest' />
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import dts from 'vite-plugin-dts';
+import * as path from 'path';
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import { libInjectCss } from 'vite-plugin-lib-inject-css';
+
+import resolvePlugin from '@rollup/plugin-node-resolve';
+import basicSsl from '@vitejs/plugin-basic-ssl';
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import { defineProjectAssetsBuildOptions, AssetOutputEntry } from './assets';
+
+export interface ProjectMeta {
+  name: string;
+  workspaceRootRelative: string;
+  root: string;
+}
+
+function createViteTestConfig(project: ProjectMeta) {
+  return {
+    globals: true,
+    cache: {
+      dir: \`\${project.workspaceRootRelative}/tmp/vitest/\${project.name}\`,
+    },
+    environment: 'jsdom',
+    include: ['test/**/*.test.{ts,mts,cts,tsx}'],
+
+    reporters: ['default'],
+    coverage: {
+      reportsDirectory: \`\${project.workspaceRootRelative}/tmp/coverage/\${project.name}\`,
+      provider: 'v8',
+    },
+  };
+}
+
+export interface ProjectViteConfigOptions {
+  assetTypes?: AssetOutputEntry[];
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface LibProjectViteConfigOptions extends ProjectViteConfigOptions {
+
+}
+
+export function defineLibProjectViteConfig(projectDir: string, project: ProjectMeta, options?: LibProjectViteConfigOptions) {
+  options = options ?? {};
+  const assetsConfig = defineProjectAssetsBuildOptions(options.assetTypes);
+  return defineConfig({
+    root: projectDir,
+    cacheDir: \`\${project.workspaceRootRelative}/tmp/vite/\${project.name}\`,
+
+    plugins: [
+      vue(),
+      nxViteTsPaths(),
+      dts({
+        entryRoot: 'src',
+        tsconfigPath: path.join(projectDir, 'tsconfig.build.json'),
+      }),
+      libInjectCss(),
+    ],
+
+    // Configuration for building your library.
+    // See: https://vitejs.dev/guide/build.html#library-mode
+    build: {
+      outDir: \`\${project.workspaceRootRelative}/dist/\${project.root}\`,
+      emptyOutDir: true,
+      cssCodeSplit: true,
+      reportCompressedSize: true,
+      commonjsOptions: {
+        transformMixedEsModules: true,
+      },
+      lib: {
+        // Could also be a dictionary or array of multiple entry points.
+        entry: 'src/index.ts',
+        name: project.name,
+        fileName: 'index',
+        // Change this to the formats you want to support.
+        // Don't forget to update your package.json as well.
+        formats: ['es'],
+      },
+      rollupOptions: {
+        rollupOptions: {
+          preserveSymlinks: true,
+          output: {
+            preserveModules: false,
+            entryFileNames: assetsConfig.entryFileNames,
+            assetFileNames: assetsConfig.assetFileNames,
+            chunkFileNames: assetsConfig.chunkFileNames
+          }
+        },
+        // External packages that should not be bundled into your library.
+        external: [],
+      },
+    },
+
+    test: createViteTestConfig(project)
+  });
+}
+
+
+export interface AppProjectViteConfigOptions extends ProjectViteConfigOptions {
+  server?: {
+    port?: number,
+    host?: string;
+  },
+
+  preview?: {
+    port?: number,
+    host?: string;
+  };
+}
+
+export function defineAppProjectViteConfig(projectDir: string, project: ProjectMeta, options?: AppProjectViteConfigOptions) {
+  options = options ?? {};
+
+  const assetsConfig = defineProjectAssetsBuildOptions(options?.assetTypes);
+  return defineConfig({
+    root: projectDir,
+    cacheDir: \`\${project.workspaceRootRelative}/tmp/vite/\${project.name}\`,
+    server: {
+      port: 20021,
+      host: 'localhost',
+
+      fs: {
+        // Allow serving files from one level up to the project root
+        strict: false,
+      },
+
+      ...(options?.server ?? {})
+    },
+
+    preview: {
+      port: 20022,
+      host: 'localhost',
+      ...(options?.preview ?? {})
+    },
+
+    publicDir: path.resolve(projectDir, './public'),
+    build: {
+      outDir: \`\${project.workspaceRootRelative}/dist/\${project.root}\`,
+      reportCompressedSize: true,
+      commonjsOptions: { transformMixedEsModules: true },
+      minify: true,
+      assetsDir: assetsConfig.assetsDir,
+      // don't inline anything for demo
+      assetsInlineLimit: 0,
+      emptyOutDir: true,
+      rollupOptions: {
+        preserveSymlinks: true,
+        output: {
+          entryFileNames: assetsConfig.entryFileNames,
+          assetFileNames: assetsConfig.assetFileNames,
+          chunkFileNames: assetsConfig.chunkFileNames
+        }
+      }
+    },
+
+    plugins: [
+      vue({
+        template: {
+          compilerOptions: {
+            //isCustomElement: (tag) => /^[A-Z]/.test(tag)
+          },
+        },
+      }),
+      nxViteTsPaths(),
+      VueI18nPlugin({
+        include: [path.resolve(projectDir, './src/*/Asset/Locale/**')],
+        defaultSFCLang: 'yaml',
+        allowDynamic: true,
+        dropMessageCompiler: true,
+      }),
+      resolvePlugin(undefined),
+      basicSsl(),
+    ],
+
+    // Uncomment this if you are using workers.
+    // worker: {
+    //  plugins: [ nxViteTsPaths() ],
+    // },
+
+    test: createViteTestConfig(project)
+  });
+}"
+`;
+
 exports[`preset generator CONTRIBUTING.md should match snapshot 1`] = `
 "# Contributing to test-workspace
 
 First off, thanks for taking the time to contribute! 🎉
 
 The following is a set of guidelines for contributing to test-workspace. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
+
 
 ## How Can I Contribute?
 
@@ -101,8 +546,7 @@ This section lists the labels we use to help us track and manage issues and pull
 
 ---
 
-Thank you for your contributions! Your help is greatly appreciated.
-"
+Thank you for your contributions! Your help is greatly appreciated."
 `;
 
 exports[`preset generator Makefile should match snapshot 1`] = `
@@ -110,22 +554,17 @@ exports[`preset generator Makefile should match snapshot 1`] = `
 export WORKSPACE = test-workspace
 
 ## PATHS
-export BIN_ROOT_PATH = ./bin
+export BIN_ROOT_PATH = ./.workspace/bin
 export UTIL_ROOT_PATH = $(realpath $(BIN_ROOT_PATH)/util)
 export UTIL_PATH = $(UTIL_ROOT_PATH)/util.sh
-
-#ifndef CI
-## dev.env
-	#include dev.env
-	#export $(shell sed 's/=.*//' dev.env)
-#endif
 
 ## VERSION
 ifeq "$(ENV)" "dev"
   export VERSION = dev
 endif
 
-DC=docker compose -p $(WORKSPACE)
+export DOCKER_DIR = .workspace/docker
+DC=docker compose -p $(WORKSPACE) --project-directory .
 
 # Help target settings
 INFO = Showing targets for all of ENV(default: dev)
@@ -160,7 +599,7 @@ up:
 		chmod 777 ./tmp/docker
 		chmod 640 -R ./docker/ca/certs/db
 	fi
-	$(DC) -f docker-compose-dev.yaml --env-file ./docker/dev/.env up -d --wait --wait-timeout 5
+	$(DC) -f $(DOCKER_DIR)/dev/docker-compose-dev.yaml --env-file $(DOCKER_DIR)/dev/.env up -d --wait --wait-timeout 5
 	sleep 3
 
 ## Clear testing env
@@ -168,7 +607,8 @@ down:
 	$(DC) down -t 2
 
 build_dev_image:
-	DOCKER_BUILDKIT=1 docker build -t test-workspace/dev:latest -f ./docker/app/Dockerfile --target=dev .
+	DOCKER_BUILDKIT=1 docker build -t test-workspace/dev:latest -f $(DOCKER_DIR)/app/Dockerfile --target=dev .
+
 endif"
 `;
 
@@ -182,160 +622,20 @@ Replace with Yours project workspace description.
 To start contributing you need install some tools and init developer environment.
 
 ### Tools
-
-- NodeJS
-- pnpm
-- Nx (\`pnpm add --global nx@19.1.0\`)
-- Docker + Compose
-- make
+ - NodeJS
+ - pnpm
+ - Nx (\`pnpm add --global nx@19.1.1\`)
+ - Docker + Compose
+ - make
 
 To init developer environment run:
-
 \`\`\`bash
 make init_devenv
 \`\`\`
 
 ## Contributing
 
-Contributing Guide is in separate file [CONTRIBUTING.md](./CONTRIBUTING.md)
-"
-`;
-
-exports[`preset generator docker/app/Dockerfile should match snapshot 1`] = `
-"# pnpm https://github.com/moby/moby/issues/40449#issuecomment-1758956399
-ARG NODE_IMAGE=node:22-alpine3.18
-ARG PM2_VERSION=5.3.1
-ARG USER_UID=1000
-
-FROM "$NODE_IMAGE" as deps
-
-ENV NODE_ENV=production
-ENV PNPM_HOME="/app/.pnpm-store"
-ENV PATH="$PNPM_HOME:$PATH"
-
-RUN mkdir -p /app/.pnpm-store && chown -R node:node /app && chmod -R 777 /app && corepack enable && pnpm config set store-dir "$PNPM_HOME"
-
-USER node
-WORKDIR /app
-
-COPY --chown=node:node ./pnpm-lock.yaml ./
-RUN --mount=type=cache,target=/app/.pnpm-store,uid=\${USER_UID},gid=\${USER_UID} pnpm fetch --prod --ignore-scripts
-
-COPY --chown=node:node ./pnpm-lock.yaml ./package.json ./prod/
-RUN --mount=type=cache,ro,target=/app/.pnpm-store,uid=\${USER_UID},gid=\${USER_UID} cd prod && pnpm install --prod --offline --frozen-lockfile --ignore-scripts
-
-##########################
-# DEV container tool stage
-FROM deps as dev
-RUN --mount=type=cache,target=/app/.pnpm-store,uid=\${USER_UID},gid=\${USER_UID} pnpm fetch --dev --ignore-scripts
-
-COPY --chown=node:node ./package.json ./
-RUN --mount=type=cache,ro,target=/app/.pnpm-store,uid=\${USER_UID},gid=\${USER_UID} pnpm install --prod=false --offline --frozen-lockfile --ignore-scripts
-
-EXPOSE 3000
-
-CMD ["sleep", "1000"]
-
-#######################
-# API application stage
-FROM $NODE_IMAGE as app_api
-ARG APP_ID
-
-RUN mkdir /app && chown node:node /app && chmod 770 /app && npm i -g pm2@\${PM2_VERSION}
-WORKDIR /app
-
-RUN --mount=type=bind,from=deps,source=/app,target=/tmp/deps cp -R -p /tmp/deps/prod/* ./
-
-COPY --chown=node:node ./dist/apps/\${APP_ID} ./apps/\${APP_ID}
-COPY --chown=node:node ./dist/libs ./libs
-COPY --chown=node:node ./docker/app/pm2.config.cjs ./pm2.config.cjs
-
-USER node
-ENV NODE_ENV=production
-EXPOSE 3000
-RUN ln -s apps/\${APP_ID}/src/index.js entrypoint
-
-CMD ["pm2-runtime", "--json", "pm2.config.cjs"]
-"
-`;
-
-exports[`preset generator docker/app/pm2.config.cjs should match snapshot 1`] = `
-"var fs = require('fs');
-const configPath = process.env['PM2_CONFIG_PATH'] ?? './config/pm2.config.json';
-const config = JSON.parse(fs.readFileSync(configPath, { encoding: 'utf8' }));
-module.exports = {
-  apps: [
-    {
-      script: './entrypoint',
-      ...config,
-    },
-  ],
-};
-"
-`;
-
-exports[`preset generator docker/dev/.env should match snapshot 1`] = `
-"WORKSPACE=test-workspace
-
-HOST_DATA_DIR=./tmp/docker
-HOST_CONFIG_DIR=./docker/dev
-HOST_CA_DIR=./docker/dev/ca
-HOST_CERTS_DIR=./docker/dev/ca/certs
-HOST_CA_CRT=./docker/dev/ca/ca.crt
-
-# SERVICES
-
-# Redis
-REDIS_HOST_PORT=25010
-REDIS_PASSWORD=testredis
-
-# DB
-DB_HOST_PORT=25011
-
-"
-`;
-
-exports[`preset generator docker-compose-dev.yaml should match snapshot 1`] = `
-"version: '3.6'
-services:
-  redis:
-    image: bitnami/redis:7.2
-    container_name: \${PROJECT}-redis
-    restart: always
-    environment:
-      - ALLOW_EMPTY_PASSWORD=no
-      - REDIS_AOF_ENABLED=no
-      - REDIS_PASSWORD=\${REDIS_PASSWORD}
-      - REDIS_ACLFILE=/bitnami/redis/config/users.acl
-    ports:
-      - \${REDIS_HOST_PORT}:6379
-    volumes:
-      - \${HOST_CONFIG_DIR}/redis:/bitnami/redis/config
-    tmpfs:
-      - /bitnami/redis/data:size=64M
-  db:
-    image: bitnami/postgresql:16.2.0
-    container_name: \${PROJECT}-db
-    restart: always
-    environment:
-      - POSTGRESQL_POSTGRES_PASSWORD=testroot
-      - POSTGRESQL_DATABASE=\${PROJECT}
-      - POSTGRESQL_USERNAME=\${PROJECT}
-      - POSTGRESQL_PASSWORD=test
-      - POSTGRESQL_ENABLE_TLS=yes
-      - POSTGRESQL_TLS_CERT_FILE=/opt/bitnami/postgresql/certs/db.crt
-      - POSTGRESQL_TLS_KEY_FILE=/opt/bitnami/postgresql/certs/db.key
-      - POSTGRESQL_TLS_CA_FILE=/opt/bitnami/postgresql/certs/ca.crt
-    volumes:
-      - \${HOST_CERTS_DIR}/db/db.crt:/opt/bitnami/postgresql/certs/db.crt
-      - \${HOST_CERTS_DIR}/db/db.key:/opt/bitnami/postgresql/certs/db.key
-      - \${HOST_CA_CRT}:/opt/bitnami/postgresql/certs/ca.crt
-    mem_limit: 512M
-    tmpfs:
-      - /tmp:size=256M
-    ports:
-      - \${DB_HOST_PORT}:5432
-"
+Contributing Guide is in separate file [CONTRIBUTING.md](./CONTRIBUTING.md)"
 `;
 
 exports[`preset generator nx.json should match snapshot 1`] = `
@@ -345,32 +645,56 @@ exports[`preset generator nx.json should match snapshot 1`] = `
   },
   "targetDefaults": {
     "build": {
-      "inputs": ["default", "!{projectRoot}/test/**/*"],
-      "dependsOn": ["^build"],
       "cache": true
     },
     "lint": {
+      "cache": true
+    },
+    "@nx/js:tsc": {
+      "inputs": [
+        "production",
+        "^production"
+      ],
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "dependsOn": [
+        "^build",
+        "test"
+      ],
+      "cache": true,
+      "options": {
+        "outputPath": "dist/{projectRoot}",
+        "tsConfig": "{projectRoot}/tsconfig.build.json"
+      }
+    },
+    "@nx/jest:jest": {
+      "cache": true,
       "inputs": [
         "default",
-        "{workspaceRoot}/.eslintrc.json",
-        "{workspaceRoot}/.eslintignore"
+        "^production",
+        "{workspaceRoot}/jest.preset.js"
       ],
-      "cache": true
-    },
-    "lint-fix": {
-      "cache": false
-    },
-    "test": {
-      "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"],
-      "cache": true
-    },
-    "test-watch": {
-      "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"],
-      "cache": true
-    },
-    "@nx/vite:test": {
-      "cache": true,
-      "inputs": ["default", "^default"]
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.ts",
+        "runInBand": true,
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "watch": {
+          "watch": true
+        },
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        },
+        "updateSnapshot": {
+          "updateSnapshot": true
+        },
+        "codeCoverage": {
+          "codeCoverage": true
+        }
+      }
     },
     "@nx/eslint:lint": {
       "inputs": [
@@ -378,7 +702,119 @@ exports[`preset generator nx.json should match snapshot 1`] = `
         "{workspaceRoot}/.eslintrc.json",
         "{workspaceRoot}/.eslintignore"
       ],
-      "cache": true
+      "cache": true,
+      "options": {
+        "lintFilePatterns": [
+          "{projectRoot}/**/*.ts",
+          "{projectRoot}/package.json"
+        ]
+      },
+      "configurations": {
+        "fix": {
+          "fix": true,
+          "cache": false
+        }
+      }
+    },
+    "@nx/vite:build": {
+      "inputs": [
+        "production",
+        "^production"
+      ],
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/{projectRoot}",
+        "skipTypeCheck": true,
+        "configFile": "{projectRoot}/vite.config.ts",
+        "tsConfig": "{projectRoot}/tsconfig.build.json",
+        "generatePackageJson": false
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production"
+        }
+      }
+    },
+    "@nx/vite:preview-server": {
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "build:development"
+        },
+        "production": {
+          "buildTarget": "build:production"
+        }
+      }
+    },
+    "@nx/vite:test": {
+      "cache": true,
+      "inputs": [
+        "default",
+        "^default"
+      ],
+      "options": {
+        "configFile": "{projectRoot}/vite.config.ts",
+        "passWithNoTests": true,
+        "reportsDirectory": "../../../coverage/{projectRoot}"
+      },
+      "configurations": {
+        "watch": {
+          "watch": true
+        }
+      }
+    },
+    "@nx/storybook:storybook": {
+      "options": {
+        "port": 4400,
+        "configDir": "libs/front/mao1/.storybook"
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "@nx/storybook:build": {
+      "outputs": [
+        "{options.outputDir}"
+      ],
+      "options": {
+        "outputDir": "dist/storybook/{projectRoot}",
+        "configDir": "{projectRoot}/.storybook"
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "storybook-test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "test-storybook -c {projectRoot}/.storybook --url=http://localhost:4400"
+      }
+    },
+    "storybook-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "storybook-build",
+        "staticFilePath": "dist/storybook/{projectRoot}",
+        "spa": true
+      },
+      "configurations": {
+        "ci": {
+          "buildTarget": "storybook-build:ci"
+        }
+      }
     }
   },
   "extends": "nx/presets/npm.json",
@@ -388,12 +824,19 @@ exports[`preset generator nx.json should match snapshot 1`] = `
     }
   },
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "!{projectRoot}/README.md",
+      "sharedGlobals"
+    ],
     "sharedGlobals": [],
     "production": [
       "default",
+      "!{projectRoot}/test/**/*",
+      "!{projectRoot}/.vite/**/*",
+      "!{projectRoot}/.storybook/**/*",
       "!{projectRoot}/jest.config.{js,ts,mjs,mts}",
-      "!{projectRoot}/vite.config.{js,ts,mjs,mts}",
+      "!{projectRoot}/tsconfig.test.json",
       "!{projectRoot}/.eslintrc.json"
     ]
   },
@@ -435,15 +878,23 @@ exports[`preset generator package.json should match snapshot 1`] = `
     "@intlify/unplugin-vue-i18n": "^4.0.0",
     "@jest/globals": "^29.7.0",
     "@nestjs/testing": "^10.3.8",
-    "@nx/devkit": "19.1.0",
-    "@nx/esbuild": "19.1.0",
-    "@nx/eslint-plugin": "19.1.0",
-    "@nx/jest": "19.1.0",
-    "@nx/js": "19.1.0",
-    "@nx/linter": "19.1.0",
-    "@nx/plugin": "19.1.0",
+    "@nx/esbuild": "19.1.1",
+    "@nx/eslint-plugin": "19.1.1",
+    "@nx/jest": "19.1.1",
+    "@nx/js": "19.1.1",
+    "@nx/linter": "19.1.1",
+    "@nx/storybook": "19.1.1",
+    "@nx/vite": "19.1.1",
+    "@nx/vue": "19.1.1",
+    "@nx/web": "19.1.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@samatech/postcss-basics": "^0.6.0",
+    "@storybook/addon-essentials": "^8.1.5",
+    "@storybook/addon-interactions": "^8.1.5",
+    "@storybook/core-server": "^8.1.5",
+    "@storybook/test": "^8.1.5",
+    "@storybook/vue3": "^8.1.5",
+    "@storybook/vue3-vite": "^8.1.5",
     "@stylistic/eslint-plugin": "^2.1.0",
     "@types/jest": "^29.5.12",
     "@types/node": "20.12.12",
@@ -452,6 +903,7 @@ exports[`preset generator package.json should match snapshot 1`] = `
     "@vitejs/plugin-vue": "^5.0.4",
     "@vitest/coverage-v8": "1.6.*",
     "@vitest/ui": "1.6.*",
+    "@vue/eslint-config-prettier": "^7.1.0",
     "@vue/eslint-config-typescript": "^11.0.3",
     "@vue/test-utils": "^2.4.5",
     "@vue/tsconfig": "^0.4.0",
@@ -473,11 +925,13 @@ exports[`preset generator package.json should match snapshot 1`] = `
     "jsdom": "^24.0.0",
     "pinia": "^2.1.7",
     "postcss": "^8.4.38",
+    "prettier": "3.2.5",
     "primeflex": "^3.3.1",
     "primeicons": "^7.0.0",
     "primevue": "^3.52.0",
     "rollup": "^4.17.0",
     "sass": "^1.75.0",
+    "storybook": "^8.1.5",
     "stylelint": "^16.6.0",
     "stylelint-config-standard": "^36.0.0",
     "ts-jest": "^29.1.2",
@@ -487,6 +941,8 @@ exports[`preset generator package.json should match snapshot 1`] = `
     "unplugin-swc": "^1.4.5",
     "vee-validate": "^4.12.6",
     "vite": "^5.2.10",
+    "vite-plugin-dts": "3.9.1",
+    "vite-plugin-lib-inject-css": "2.1.1",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "1.6.*",
     "vue": "^3.4.25",
@@ -513,7 +969,9 @@ exports[`preset generator tsconfig.base.json should match snapshot 1`] = `
     "moduleResolution": "Node16",
     "module": "Node16",
     "target": "ES2022",
-    "lib": ["ES2022"],
+    "lib": [
+      "ES2022"
+    ],
     "esModuleInterop": true,
     "sourceMap": true,
     "declaration": true,
@@ -544,7 +1002,9 @@ exports[`preset generator tsconfig.base.json should match snapshot 1`] = `
       }
     ]
   },
-  "exclude": ["node_modules", "tmp"]
-}
-"
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
+}"
 `;
