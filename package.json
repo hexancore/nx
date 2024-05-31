@@ -7,6 +7,11 @@
     "ci": "nx run-many --targets=lint,test,build,e2e --configuration=ci",
     "precommit": "nx run-many --targets=lint,test,build"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hexancore/nx.git",
+    "directory": "packages/plugin"
+  },
   "private": true,
   "packageManager": "pnpm@8.15.8",
   "dependencies": {
