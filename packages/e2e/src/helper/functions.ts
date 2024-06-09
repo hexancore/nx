@@ -19,7 +19,7 @@ export function createTestWorkspace(name = 'test-workspace'): string {
   const workspaceRoot = join(cwd, 'tmp', name);
 
   if (existsSync(workspaceRoot)) {
-    execNx(workspaceRoot, 'reset');
+    execNx(workspaceRoot, 'reset', false);
     rmSync(workspaceRoot, {
       recursive: true,
       force: true,
@@ -49,11 +49,14 @@ export function createTestWorkspace(name = 'test-workspace'): string {
   return workspaceRoot;
 }
 
-export function execNx(workspaceRoot: string, command: string): void {
-  execSync(`nx ${command}`, {
+export function execNx(workspaceRoot: string, command: string, liveOutput?: boolean): Buffer {
+  liveOutput = liveOutput ?? true;
+  const output = execSync(`nx ${command}`, {
     cwd: workspaceRoot,
-    stdio: 'inherit',
+    stdio: liveOutput ? 'inherit' : undefined,
     env: process.env,
     timeout: 3 * 60 * 1000
   });
+
+  return output;
 }

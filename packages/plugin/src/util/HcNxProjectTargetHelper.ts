@@ -1,22 +1,21 @@
-import type { ProjectMeta } from "./ProjectMeta";
+import type { TargetConfiguration } from "@nx/devkit";
+import type { HcNxProjectMeta } from "./HcNxProjectMeta";
 
-export interface NxTargetMeta {
-  executor: string,
-  options?: Record<string, any>;
-  configurations?: Record<string, any>;
-}
 
 export class HcNxProjectTargetHelper {
 
-  public targets(project: ProjectMeta): Record<string, NxTargetMeta> {
+  public targets(project: HcNxProjectMeta): Record<string, TargetConfiguration> {
     const targets = {
       lint: this.lint(),
       test: this.test(project),
       build: this.build(project),
     };
 
-    if (project.subtype === 'frontend' && project.type === 'application') {
-      targets['preview'] = this.preview();
+    if (project.type === 'application') {
+      targets['serve'] = this.serve(project);
+      if (project.subtype === 'frontend') {
+        targets['preview'] = this.preview();
+      }
     }
 
     if (project.subtype === 'frontend') {
@@ -28,8 +27,8 @@ export class HcNxProjectTargetHelper {
 
     return targets;
   }
-  public build(project: ProjectMeta): NxTargetMeta {
 
+  public build(project: HcNxProjectMeta): TargetConfiguration {
     if (project.subtype === 'backend' || project.subtype === 'shared') {
       return {
         "executor": "@nx/js:tsc",
@@ -44,13 +43,13 @@ export class HcNxProjectTargetHelper {
     };
   }
 
-  public lint(): NxTargetMeta {
+  public lint(): TargetConfiguration {
     return {
       executor: "@nx/eslint:lint",
     };
   }
 
-  public test(project: ProjectMeta): NxTargetMeta {
+  public test(project: HcNxProjectMeta): TargetConfiguration {
     if (project.subtype === 'backend' || project.subtype === 'shared') {
       return {
         executor: "@nx/jest:jest",
@@ -62,31 +61,49 @@ export class HcNxProjectTargetHelper {
     };
   }
 
-  public preview(): NxTargetMeta {
+  public serve(project: HcNxProjectMeta): TargetConfiguration {
+    if (project.subtype === 'backend') {
+      return {
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "options": {
+          "runtimeArgs": [],
+          "buildTarget": "build",
+          "port": 19002
+        }
+      };
+    }
+
+    return {
+      "executor": "@nx/vite:dev-server"
+    };
+  }
+
+  public preview(): TargetConfiguration {
     return {
       "executor": "@nx/vite:preview-server"
     };
   }
 
-  public storybook(): NxTargetMeta {
+  public storybook(): TargetConfiguration {
     return {
       "executor": "@nx/storybook:storybook",
     };
   }
 
-  public storybookBuild(): NxTargetMeta {
+  public storybookBuild(): TargetConfiguration {
     return {
       "executor": "@nx/storybook:build",
     };
   }
 
-  public storybookTest(): NxTargetMeta {
+  public storybookTest(): TargetConfiguration {
     return {
       "executor": "nx:run-commands",
     };
   }
 
-  public storybookStatic(): NxTargetMeta {
+  public storybookStatic(): TargetConfiguration {
     return {
       "executor": "@nx/web:file-server",
     };

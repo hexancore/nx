@@ -23,9 +23,42 @@ Perfect for teams looking to combine the flexibility of Hexancore with the power
 ## Quick Start
 
 ```bash
-npx create-nx-workspace <workspace-name> --pm pnpm --preset @hexancore/nx --nxCloud false --workspaceType integrated
+npx create-nx-workspace <workspace-name> --pm pnpm --preset @hexancore/nx --nxCloud skip --workspaceType integrated
 ```
 
 ## Documentation
 
-https://hexancore.github.io/hexancore/guide/getting-started
+### Generators
+
+#### app
+Creates new application.
+
+```bash
+nx g @hexancore/nx:app <directory> --type <backend|frontend>
+```
+
+**Options**
+- **directory** - Application directory, final: `apps/<directory>` and project name will be `app-<directory where all '/' replaced with '-'>`
+
+- **type** - Application type
+  - backend
+  - frontend
+
+#### lib
+
+Creates new library.
+
+```bash
+nx g @hexancore/nx:lib <directory> --type <backend|frontend|shared>
+```
+
+**Options**
+- **directory** - Library directory, final: `libs/<directory>` and project name will be `<directory where all '/' replaced with '-'>`
+
+- **type** - Library type
+  - backend
+  - frontend
+  - shared
+
+**More documentation**
+https://hexancore.dev/guide/getting-started

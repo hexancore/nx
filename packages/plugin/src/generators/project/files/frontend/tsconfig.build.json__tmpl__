@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc",
+    "outDir": "<%= project.relative.workspaceRoot %>/dist/out-tsc",
     "types": ["vite/client"]
   },
   "exclude": [

@@ -1,8 +1,0 @@
-/**
- * @group unit
- */
-describe('unit sample test', () => {
-  test('sample', () => {
-    expect(1).toBe(1);
-  });
-});

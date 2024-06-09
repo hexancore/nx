@@ -14,7 +14,7 @@
     "docker-compose*.yaml": false,
     "docker": false,
     "nx.json": false,
-    "**/vite.config.ts": false,
+    "**/vite.config.*s": false,
     "**/jest.*": false,
     "**/node_modules": false,
     ".vscode": false,

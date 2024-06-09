@@ -4,15 +4,19 @@ import { createApp } from 'vue';
 import App from './Core/Component/View/App.vue';
 
 import { PrimeVueCorePlugin } from './Core/Service/Plugin/PrimeVueCorePlugin';
-import router from './Core/Service/Router/Router';
+
 import { I18NCorePlugin } from './Core/Service/Plugin/I18NCorePlugin';
 import { PiniaCorePlugin } from './Core/Service/Plugin/PiniaCorePlugin';
+
+import router from './Core/Service/Router/Router';
 
 const app = createApp(App);
 
 PrimeVueCorePlugin(app);
+
 I18NCorePlugin(app);
 PiniaCorePlugin(app);
+
 app.use(router);
 
 app.mount('#root');

@@ -46,7 +46,7 @@ exports[`Library Generator: Shared libs/task-manager/shared/project.json should 
   "name": "task-manager-shared",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
-  "sourceRoot": "{projectRoot}/src",
+  "sourceRoot": "libs/task-manager/shared/src",
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint"
@@ -82,10 +82,6 @@ exports[`Library Generator: Shared libs/task-manager/shared/tsconfig.json should
 "{
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "moduleResolution": "Node16",
-    "module": "Node16",
-    "target": "es2022",
-    "esModuleInterop": true,
     "paths": {
       "@testcompany/task-manager-shared": [
         "libs/task-manager/shared/src/index.ts"

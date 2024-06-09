@@ -36,7 +36,7 @@
     "@nx/jest:jest": {
       "cache": true,
       "outputs": ["{options.outputFile}"],
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "inputs": ["default", "{workspaceRoot}/jest.preset.js"],
       "options": {
         "jestConfig": "{projectRoot}/jest.config.ts",
         "runInBand": true,
@@ -56,7 +56,7 @@
       }
     },
     "@nx/js:tsc": {
-      "inputs": ["production", "^production"],
+      "inputs": ["production"],
       "outputs": ["{options.outputPath}"],
       "dependsOn": ["^build", "test"],
       "cache": true,

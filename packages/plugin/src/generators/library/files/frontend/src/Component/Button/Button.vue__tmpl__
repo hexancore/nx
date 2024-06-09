@@ -1,0 +1,111 @@
+<template>
+  <button type="button" :class="classes" @click="onClick" :style="style">
+    <slot name="icon"></slot> {{ label }} <slot></slot>
+    <slot name="BoxComponent"></slot>
+  </button>
+
+</template>
+
+<script lang="ts" setup>
+import { computed } from 'vue';
+
+const props = withDefaults(defineProps<{
+  /**
+   * The label of the button
+   */
+  label: string,
+  /**
+   * primary or secondary button
+   */
+  primary?: boolean,
+  /**
+   * size of the button
+   */
+  size?: 'small' | 'medium' | 'large',
+  /**
+   * background color of the button
+   */
+  backgroundColor?: string,
+
+}>(), { primary: false });
+
+const emit = defineEmits<{
+  (e: 'click', id: number): void;
+}>();
+
+const classes = computed(() => ({
+  'storybook-button': true,
+  'storybook-button--primary': props.primary,
+  'storybook-button--secondary': !props.primary,
+  [`storybook-button--${props.size || 'medium'}`]: true,
+}));
+
+const style = computed(() => ({
+  backgroundColor: props.backgroundColor
+}));
+
+const onClick = () => {
+  emit("click", 1)
+};
+
+</script>
+
+<style lang='scss'>
+
+.storybook-button {
+  font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  border: 0;
+  border-radius: 3em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.storybook-button:hover {
+    background-color: #007bb5;
+    transform: scale(1.05);
+}
+
+
+.storybook-button:active {
+    background-color: #005f87;
+    transform: scale(0.95);
+}
+
+.storybook-button--primary {
+  color: white;
+  background-color: #1ea7fd;
+}
+.storybook-button--secondary {
+  color: #333;
+  background-color: transparent;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
+}
+
+.storybook-button--secondary:hover {
+  background-color: rgba(0, 0, 0, 0.1); /* Lekko ciemniejsze tło przy hover */
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 0px 1px inset;
+  transform: scale(1.05);
+}
+
+.storybook-button--secondary:active {
+  background-color: rgba(0, 0, 0, 0.2); /* Jeszcze ciemniejsze tło przy aktywacji */
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 0px 1px inset;
+  transform: scale(0.95);
+}
+
+.storybook-button--small {
+  font-size: 12px;
+  padding: 10px 16px;
+}
+.storybook-button--medium {
+  font-size: 14px;
+  padding: 11px 20px;
+}
+.storybook-button--large {
+  font-size: 16px;
+  padding: 12px 24px;
+}
+</style>

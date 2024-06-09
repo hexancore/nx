@@ -1,0 +1,129 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Function should generate with mode: development 1`] = `
+{
+  "build": {
+    "assetsDir": "assets",
+    "commonjsOptions": {
+      "transformMixedEsModules": true,
+    },
+    "emptyOutDir": true,
+    "minify": true,
+    "outDir": "../../dist/apps/acme-some",
+    "reportCompressedSize": true,
+    "rollupOptions": {
+      "external": [
+        "vue",
+      ],
+      "output": {
+        "assetFileNames": [Function],
+        "chunkFileNames": "assets/js/[name]-[hash]-chunk.js",
+        "entryFileNames": "assets/js/[name]-[hash].js",
+        "format": "esm",
+        "paths": undefined,
+      },
+    },
+  },
+  "cacheDir": "../../tmp/vite/app-acme-some",
+  "plugins": [],
+  "preview": {
+    "host": "localhost",
+    "port": 20022,
+  },
+  "resolve": {
+    "alias": [
+      {
+        "customResolver": [Function],
+        "find": /\\^@acme-work\\\\/project\\.json-dep-acme\\\\/\\(\\.\\*\\)\\$/,
+        "replacement": "/root/libs/libs/project.json/dep/acme/src/$1",
+      },
+    ],
+  },
+  "root": "/root/acme-work/apps/acme-some",
+  "server": {
+    "fs": {
+      "strict": false,
+    },
+    "host": "localhost",
+    "port": 20021,
+  },
+  "test": {
+    "coverage": {
+      "provider": "v8",
+      "reportsDirectory": "../../tmp/coverage/app-acme-some",
+    },
+    "environment": "jsdom",
+    "globals": true,
+    "include": [
+      "test/**/*.test.{ts,mts,cts,tsx}",
+    ],
+    "reporters": [
+      "default",
+    ],
+  },
+}
+`;
+
+exports[`Function should generate with mode: production 1`] = `
+{
+  "build": {
+    "assetsDir": "assets",
+    "commonjsOptions": {
+      "transformMixedEsModules": true,
+    },
+    "emptyOutDir": true,
+    "minify": true,
+    "outDir": "../../dist/apps/acme-some",
+    "reportCompressedSize": true,
+    "rollupOptions": {
+      "external": [
+        "vue",
+      ],
+      "output": {
+        "assetFileNames": [Function],
+        "chunkFileNames": "assets/js/[name]-[hash]-chunk.js",
+        "entryFileNames": "assets/js/[name]-[hash].js",
+        "format": "esm",
+        "paths": undefined,
+      },
+    },
+  },
+  "cacheDir": "../../tmp/vite/app-acme-some",
+  "plugins": [],
+  "preview": {
+    "host": "localhost",
+    "port": 20022,
+  },
+  "resolve": {
+    "alias": [
+      {
+        "customResolver": [Function],
+        "find": /\\^@acme-work\\\\/project\\.json-dep-acme\\\\/\\(\\.\\*\\)\\$/,
+        "replacement": "/root/dist/libs/libs/project.json/dep/acme/$1",
+      },
+    ],
+  },
+  "root": "/root/acme-work/apps/acme-some",
+  "server": {
+    "fs": {
+      "strict": false,
+    },
+    "host": "localhost",
+    "port": 20021,
+  },
+  "test": {
+    "coverage": {
+      "provider": "v8",
+      "reportsDirectory": "../../tmp/coverage/app-acme-some",
+    },
+    "environment": "jsdom",
+    "globals": true,
+    "include": [
+      "test/**/*.test.{ts,mts,cts,tsx}",
+    ],
+    "reporters": [
+      "default",
+    ],
+  },
+}
+`;

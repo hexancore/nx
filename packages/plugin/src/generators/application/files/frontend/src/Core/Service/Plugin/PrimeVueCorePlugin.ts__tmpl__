@@ -5,28 +5,9 @@ import 'primevue/resources/themes/md-light-indigo/theme.css';
 import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 
-import Button from 'primevue/button';
-import Menubar from 'primevue/menubar';
-import Sidebar from 'primevue/sidebar';
-import Card from 'primevue/card';
-
-import Tooltip from 'primevue/tooltip';
-import Ripple from 'primevue/ripple';
-
-import '../../Asset/Style/style.css';
-
 export function PrimeVueCorePlugin(app: App) {
   app.use(PrimeVue, {
-    ripple: true,
+
   });
-  // eslint-disable-next-line vue/no-reserved-component-names
-  app.component('Button', Button);
-  app.component('Menubar', Menubar);
-  app.component('Sidebar', Sidebar);
-  app.component('Card', Card);
-
-  app.directive('tooltip', Tooltip);
-  app.directive('ripple', Ripple);
-
 }
 

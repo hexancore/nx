@@ -10,7 +10,7 @@ import { HcNxProjectHelper } from './HcNxProjectHelper';
 export class HcNxHelper {
 
   private static cachedPluginPackageJson: Record<string, any>;
-  private _workspacePackageNamespace!: string;
+  private _workspacePackageScope!: string;
 
   public project: HcNxProjectHelper;
 
@@ -18,11 +18,11 @@ export class HcNxHelper {
     this.project = new HcNxProjectHelper(this);
   }
 
-  public get workspacePackageNamespace(): string {
-    if (!this._workspacePackageNamespace) {
-      this._workspacePackageNamespace = this.getWorkspacePackageJson().name.split('/')[0];
+  public get workspacePackageScope(): string {
+    if (!this._workspacePackageScope) {
+      this._workspacePackageScope = this.getWorkspacePackageJson().name.split('/')[0];
     }
-    return this._workspacePackageNamespace;
+    return this._workspacePackageScope;
   }
 
   public get workspaceNxVersion(): string {

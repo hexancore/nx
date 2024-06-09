@@ -23,9 +23,13 @@ exports[`Library Generator: Frontend libs/task-manager/frontend/.eslintrc.json s
 `;
 
 exports[`Library Generator: Frontend libs/task-manager/frontend/.storybook/main.ts should match snapshot 1`] = `
-"import {defineProjectStorybookConfig} from "../../../.workspace/storybook/main.preset";
+"import { dirname } from "path";
+import { defineProjectStorybookConfig } from "../../../../.workspace/storybook/storybook.preset";
 
-export default defineProjectStorybookConfig('libs/task-manager/frontend');
+export default defineProjectStorybookConfig({
+  workspaceProjectDir: dirname(__dirname),
+  staticDirs: [],
+});
 "
 `;
 
@@ -41,13 +45,11 @@ exports[`Library Generator: Frontend libs/task-manager/frontend/README.md should
 exports[`Library Generator: Frontend libs/task-manager/frontend/package.json should match snapshot 1`] = `
 "{
   "name": "@testcompany/task-manager-frontend",
-  "type": "commonjs",
+  "type": "module",
   "private": true,
   "dependencies": {
     "tslib": "2.6.2"
   },
-  "main": "./src/index.mjs",
-  "types": "./src/index.d.ts",
   "sideEffects": [
     "**/*.css"
   ]
@@ -60,7 +62,7 @@ exports[`Library Generator: Frontend libs/task-manager/frontend/project.json sho
   "name": "task-manager-frontend",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
-  "sourceRoot": "{projectRoot}/src",
+  "sourceRoot": "libs/task-manager/frontend/src",
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint"
@@ -86,6 +88,171 @@ exports[`Library Generator: Frontend libs/task-manager/frontend/project.json sho
   }
 }
 "
+`;
+
+exports[`Library Generator: Frontend libs/task-manager/frontend/src/Asset/Style/variables.scss should match snapshot 1`] = `
+"$primary-color: #3498db;
+$secondary-color: #2ecc71;
+
+body {
+  background-color: $primary-color;
+}"
+`;
+
+exports[`Library Generator: Frontend libs/task-manager/frontend/src/Component/Button/Button.stories.ts should match snapshot 1`] = `
+"import type { Meta, StoryObj } from '@storybook/vue3';
+
+import Button from './Button.vue';
+import { h } from 'vue';
+
+const meta = {
+  title: 'Example/Button',
+  component: Button,
+
+  tags: ['autodocs'],
+  argTypes: {
+    size: { control: 'select', options: ['small', 'medium', 'large'] },
+    backgroundColor: { control: 'color' },
+    onClick: { action: 'clicked' },
+  },
+  args: { primary: false }, // default value
+} satisfies Meta<typeof Button>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+const iconImg = 'image/logo.png';
+
+export const Primary: Story = {
+  args: {
+    primary: true,
+    label: 'Hexancore',
+    icon: h('img',{src:iconImg,height:64}),
+    default:h('span',{style:{color:'yellow',padding:'16px'}},'Default Slot Content')
+  },
+};
+
+export const Secondary: Story = {
+  args: {
+    primary: false,
+    label: 'Hexancore',
+    icon: h('img',{src:iconImg,height:64}),
+    default:()=>'Default Slot Content as Text',
+  },
+};"
+`;
+
+exports[`Library Generator: Frontend libs/task-manager/frontend/src/Component/Button/Button.vue should match snapshot 1`] = `
+"<template>
+  <button type="button" :class="classes" @click="onClick" :style="style">
+    <slot name="icon"></slot> {{ label }} <slot></slot>
+    <slot name="BoxComponent"></slot>
+  </button>
+
+</template>
+
+<script lang="ts" setup>
+import { computed } from 'vue';
+
+const props = withDefaults(defineProps<{
+  /**
+   * The label of the button
+   */
+  label: string,
+  /**
+   * primary or secondary button
+   */
+  primary?: boolean,
+  /**
+   * size of the button
+   */
+  size?: 'small' | 'medium' | 'large',
+  /**
+   * background color of the button
+   */
+  backgroundColor?: string,
+
+}>(), { primary: false });
+
+const emit = defineEmits<{
+  (e: 'click', id: number): void;
+}>();
+
+const classes = computed(() => ({
+  'storybook-button': true,
+  'storybook-button--primary': props.primary,
+  'storybook-button--secondary': !props.primary,
+  [\`storybook-button--\${props.size || 'medium'}\`]: true,
+}));
+
+const style = computed(() => ({
+  backgroundColor: props.backgroundColor
+}));
+
+const onClick = () => {
+  emit("click", 1)
+};
+
+</script>
+
+<style lang='scss'>
+
+.storybook-button {
+  font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  border: 0;
+  border-radius: 3em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.storybook-button:hover {
+    background-color: #007bb5;
+    transform: scale(1.05);
+}
+
+
+.storybook-button:active {
+    background-color: #005f87;
+    transform: scale(0.95);
+}
+
+.storybook-button--primary {
+  color: white;
+  background-color: #1ea7fd;
+}
+.storybook-button--secondary {
+  color: #333;
+  background-color: transparent;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
+}
+
+.storybook-button--secondary:hover {
+  background-color: rgba(0, 0, 0, 0.1); /* Lekko ciemniejsze tło przy hover */
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 0px 1px inset;
+  transform: scale(1.05);
+}
+
+.storybook-button--secondary:active {
+  background-color: rgba(0, 0, 0, 0.2); /* Jeszcze ciemniejsze tło przy aktywacji */
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 0px 1px inset;
+  transform: scale(0.95);
+}
+
+.storybook-button--small {
+  font-size: 12px;
+  padding: 10px 16px;
+}
+.storybook-button--medium {
+  font-size: 14px;
+  padding: 11px 20px;
+}
+.storybook-button--large {
+  font-size: 16px;
+  padding: 12px 24px;
+}
+</style>"
 `;
 
 exports[`Library Generator: Frontend libs/task-manager/frontend/src/vue-shims.d.ts should match snapshot 1`] = `
@@ -114,30 +281,9 @@ exports[`Library Generator: Frontend libs/task-manager/frontend/tsconfig.build.j
 
 exports[`Library Generator: Frontend libs/task-manager/frontend/tsconfig.json should match snapshot 1`] = `
 "{
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.frontend.base.json",
   "compilerOptions": {
-    "allowJs": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "jsx": "preserve",
-    "jsxImportSource": "vue",
-    "resolveJsonModule": true,
-    "verbatimModuleSyntax": false,
-    "useDefineForClassFields": true,
-    "isolatedModules": true,
-    "types": ["vite/client", "vitest", "@intlify/unplugin-vue-i18n/messages"],
-    "noEmit": true,
-    "lib": ["ES2022", "DOM"],
-    "skipLibCheck": true,
-
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
     "paths": {
-      "@testcompany/task-manager-frontend": [
-        "libs/task-manager/frontend/src/index.ts"
-      ],
       "@": [
         "libs/task-manager/frontend/src"
       ],
@@ -175,7 +321,8 @@ exports[`Library Generator: Frontend libs/task-manager/frontend/tsconfig.storybo
   "include": [
     "src/**/*.stories.ts",
     "src/**/*.stories.tsx",
-    ".storybook/*.ts"
+    ".storybook/*.ts",
+    ".storybook/*.mts"
   ]
 }
 "
@@ -188,21 +335,18 @@ exports[`Library Generator: Frontend libs/task-manager/frontend/tsconfig.test.js
     "outDir": "../../../dist/out-tsc",
     "types": ["vitest/globals", "vitest/importMeta", "vite/client", "node", "vitest"]
   },
-  "include": ["vite.config.ts", "test/**/*.ts", "test/**/*.tsx"]
+  "include": ["vite.config.mts", "test/**/*.ts", "test/**/*.tsx"]
 }
 "
 `;
 
-exports[`Library Generator: Frontend libs/task-manager/frontend/vite.config.ts should match snapshot 1`] = `
-"import { defineLibProjectViteConfig } from "../../../.workspace/vite/vite.preset";
+exports[`Library Generator: Frontend libs/task-manager/frontend/vite.config.mts should match snapshot 1`] = `
+"import { defineLibProjectViteConfig } from "../../../.workspace/vite/vite.preset.mjs";
 
-const project = {
-  workspaceRootRelative: '../../..',
-  root: 'libs/task-manager/frontend',
-  name: 'task-manager-frontend'
+const options = {
+  workspaceProjectDir: __dirname
 };
-
-export default defineLibProjectViteConfig(__dirname, project);
+export default defineLibProjectViteConfig(options);
 "
 `;
 

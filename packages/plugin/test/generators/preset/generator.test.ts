@@ -17,8 +17,7 @@ describe('preset generator', () => {
   const expectedDotWorkspaceDirFilesToMatchSnapshots = expectedFiles('.workspace/', [
     'jest/jest.preset.ts',
     'storybook/storybook.preset.ts',
-    'vite/assets.ts',
-    'vite/vite.preset.ts',
+    'vite/vite.preset.mts',
   ]);
 
   const expectedDotDockerDirFilesToMatchSnapshots = expectedFiles('.workspace/docker/', [
@@ -39,6 +38,7 @@ describe('preset generator', () => {
     'README.md',
     'Makefile',
     'tsconfig.base.json',
+    'tsconfig.frontend.base.json',
     ...expectedDotWorkspaceDirFilesToMatchSnapshots,
     ...expectedDotDockerDirFilesToMatchSnapshots
   ];

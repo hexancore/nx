@@ -105,30 +105,7 @@ export class PresetPackageJsonGenerator {
       "vee-validate": "^4.12.6",
     };
 
-    const vueI18n = {
-      "vue-i18n": "^9.13.1",
-      "@intlify/eslint-plugin-vue-i18n": "^2.0.0",
-      "@intlify/unplugin-vue-i18n": "^4.0.0",
-      "unplugin-swc": "^1.4.5",
-    };
-
-    const vite = {
-      "@vitejs/plugin-basic-ssl": "^1.1.0",
-      "@vitejs/plugin-vue": "^5.0.4",
-      "@vitest/coverage-v8": "1.6.*",
-      "@vitest/ui": "1.6.*",
-      "vitest": "1.6.*",
-      "@rollup/plugin-node-resolve": "^15.2.3",
-      "rollup": "^4.17.0",
-      "vite": "^5.2.10",
-      "vite-tsconfig-paths": "^4.3.2",
-      "autoprefixer": "^10.4.19",
-      "@babel/core": "^7.24.4",
-      "@babel/plugin-transform-modules-commonjs": "^7.24.1",
-      "@babel/preset-env": "^7.24.4",
-      "vite-plugin-lib-inject-css": "2.1.1",
-      "vite-plugin-dts": "3.9.1",
-    };
+    const vite = this.viteDevDeps();
 
     const primevue = {
       "primeflex": "^3.3.1",
@@ -137,6 +114,7 @@ export class PresetPackageJsonGenerator {
     };
 
     const style = {
+      "autoprefixer": "^10.4.19",
       "postcss": "^8.4.38",
       "sass": "^1.75.0",
       "stylelint": "^16.6.0",
@@ -146,11 +124,45 @@ export class PresetPackageJsonGenerator {
 
     return {
       ...vue,
-      ...vueI18n,
       ...vite,
       ...primevue,
       ...style,
       ...this.storybookDevDeps()
+    };
+  }
+
+  private viteDevDeps(): Record<string, string> {
+    const vueI18n = {
+      "vue-i18n": "^9.13.1",
+      "@intlify/eslint-plugin-vue-i18n": "^2.0.0",
+      "@intlify/unplugin-vue-i18n": "^4.0.0",
+    };
+
+    const vitePlugins = {
+      ...vueI18n,
+      "unplugin-swc": "^1.4.5",
+      "@vitejs/plugin-basic-ssl": "^1.1.0",
+      "@vitejs/plugin-vue": "^5.0.4",
+      "@rollup/plugin-node-resolve": "^15.2.3",
+      "vite-plugin-lib-inject-css": "2.1.1",
+      "vite-plugin-dts": "3.9.1",
+      "unplugin-vue-components": "^0.27.0",
+    };
+
+    const vitest = {
+      "@vitest/coverage-v8": "1.6.*",
+      "@vitest/ui": "1.6.*",
+      "vitest": "1.6.*",
+    };
+
+    return {
+      "vite": "^5.2.10",
+      "rollup": "^4.17.0",
+      "@babel/core": "^7.24.4",
+      "@babel/plugin-transform-modules-commonjs": "^7.24.1",
+      "@babel/preset-env": "^7.24.4",
+      ...vitePlugins,
+      ...vitest
     };
   }
 
@@ -159,6 +171,7 @@ export class PresetPackageJsonGenerator {
     return {
       "@storybook/addon-essentials": storybookVersion,
       "@storybook/addon-interactions": storybookVersion,
+      "@storybook/builder-vite": storybookVersion,
       "@storybook/core-server": storybookVersion,
       "@storybook/test": storybookVersion,
       "@storybook/vue3": storybookVersion,
@@ -204,7 +217,8 @@ export class PresetPackageJsonGenerator {
       "@types/node": "20.12.12",
       "@nestjs/testing": "^10.3.8",
       "husky": "^9.0.11",
-      "prettier": "3.2.5"
+      "prettier": "3.2.5",
+      "glob": "^10.4.1"
     };
   }
 }

@@ -14,7 +14,7 @@ describe('Application Generator: Frontend', () => {
     await applicationGenerator(tree, options);
   });
 
-  const expecteProjectSrcFiles = expectedFiles(`${projectRoot}/src/`, [
+  const expectedProjectSrcFiles = expectedFiles(`${projectRoot}/src/`, [
     'constants.ts',
     'Core/Asset/Image/logo.png',
     'Core/Asset/Locale/en.yaml',
@@ -52,7 +52,7 @@ describe('Application Generator: Frontend', () => {
     'src/main.ts',
     '.storybook/main.ts',
     '.storybook/preview.ts',
-    'vite.config.ts',
+    'vite.config.mts',
     '.env.development',
     'index.html'
   ]);
@@ -72,11 +72,10 @@ describe('Application Generator: Frontend', () => {
   test('only file from list should exist', () => {
     const expectedWorkspaceFilesToExists = [
       `${projectRoot}/test/helper/.gitkeep`,
-      `${projectRoot}/test/config.ts`,
       `${projectRoot}/test/unit/sample.test.ts`,
       `${projectRoot}/test/integration/.gitkeep`,
       ...expectedWorkspaceFilesToMatchSnapshots,
-      ...expecteProjectSrcFiles,
+      ...expectedProjectSrcFiles,
       `${projectRoot}/public/favicon.ico`,
     ];
     const diff = tree.listChanges().map(c => c.path).filter(x => !expectedWorkspaceFilesToExists.includes(x));

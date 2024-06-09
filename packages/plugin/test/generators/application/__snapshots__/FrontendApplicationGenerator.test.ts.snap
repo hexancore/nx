@@ -30,9 +30,13 @@ exports[`Application Generator: Frontend apps/acme/frontend/.eslintrc.json shoul
 `;
 
 exports[`Application Generator: Frontend apps/acme/frontend/.storybook/main.ts should match snapshot 1`] = `
-"import {defineProjectStorybookConfig} from "../../../.workspace/storybook/main.preset";
+"import { dirname } from "path";
+import { defineProjectStorybookConfig } from "../../../../.workspace/storybook/storybook.preset";
 
-export default defineProjectStorybookConfig('apps/acme/frontend');
+export default defineProjectStorybookConfig({
+  workspaceProjectDir: dirname(__dirname),
+  staticDirs: [],
+});
 "
 `;
 
@@ -40,6 +44,7 @@ exports[`Application Generator: Frontend apps/acme/frontend/.storybook/preview.t
 
 exports[`Application Generator: Frontend apps/acme/frontend/README.md should match snapshot 1`] = `
 "# app-acme-frontend
+
 
 "
 `;
@@ -51,7 +56,7 @@ exports[`Application Generator: Frontend apps/acme/frontend/index.html should ma
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>app-pmt-web</title>
+    <title>App</title>
   </head>
   <body>
     <div id="root"></div>
@@ -69,7 +74,7 @@ exports[`Application Generator: Frontend apps/acme/frontend/project.json should 
   "name": "app-acme-frontend",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "sourceRoot": "{projectRoot}/src",
+  "sourceRoot": "apps/acme/frontend/src",
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint"
@@ -79,6 +84,9 @@ exports[`Application Generator: Frontend apps/acme/frontend/project.json should 
     },
     "build": {
       "executor": "@nx/vite:build"
+    },
+    "serve": {
+      "executor": "@nx/vite:dev-server"
     },
     "preview": {
       "executor": "@nx/vite:preview-server"
@@ -107,15 +115,19 @@ import { createApp } from 'vue';
 import App from './Core/Component/View/App.vue';
 
 import { PrimeVueCorePlugin } from './Core/Service/Plugin/PrimeVueCorePlugin';
-import router from './Core/Service/Router/Router';
+
 import { I18NCorePlugin } from './Core/Service/Plugin/I18NCorePlugin';
 import { PiniaCorePlugin } from './Core/Service/Plugin/PiniaCorePlugin';
+
+import router from './Core/Service/Router/Router';
 
 const app = createApp(App);
 
 PrimeVueCorePlugin(app);
+
 I18NCorePlugin(app);
 PiniaCorePlugin(app);
+
 app.use(router);
 
 app.mount('#root');
@@ -139,26 +151,8 @@ exports[`Application Generator: Frontend apps/acme/frontend/tsconfig.build.json 
 
 exports[`Application Generator: Frontend apps/acme/frontend/tsconfig.json should match snapshot 1`] = `
 "{
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.frontend.base.json",
   "compilerOptions": {
-    "allowJs": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "jsx": "preserve",
-    "jsxImportSource": "vue",
-    "resolveJsonModule": true,
-    "verbatimModuleSyntax": false,
-    "useDefineForClassFields": true,
-    "isolatedModules": true,
-    "types": ["vite/client", "vitest", "@intlify/unplugin-vue-i18n/messages"],
-    "noEmit": true,
-    "lib": ["ES2022", "DOM"],
-    "skipLibCheck": true,
-
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
     "paths": {
       "@": [
         "apps/acme/frontend/src"
@@ -197,7 +191,8 @@ exports[`Application Generator: Frontend apps/acme/frontend/tsconfig.storybook.j
   "include": [
     "src/**/*.stories.ts",
     "src/**/*.stories.tsx",
-    ".storybook/*.ts"
+    ".storybook/*.ts",
+    ".storybook/*.mts"
   ]
 }
 "
@@ -210,21 +205,18 @@ exports[`Application Generator: Frontend apps/acme/frontend/tsconfig.test.json s
     "outDir": "../../../dist/out-tsc",
     "types": ["vitest/globals", "vitest/importMeta", "vite/client", "node", "vitest"]
   },
-  "include": ["vite.config.ts", "test/**/*.ts", "test/**/*.tsx"]
+  "include": ["vite.config.mts", "test/**/*.ts", "test/**/*.tsx"]
 }
 "
 `;
 
-exports[`Application Generator: Frontend apps/acme/frontend/vite.config.ts should match snapshot 1`] = `
-"import { defineAppProjectViteConfig } from "../../../.workspace/vite/vite.preset";
+exports[`Application Generator: Frontend apps/acme/frontend/vite.config.mts should match snapshot 1`] = `
+"import { defineAppProjectViteConfig } from "../../../.workspace/vite/vite.preset.mjs";
 
-const project = {
-  workspaceRootRelative: '../../..',
-  root: 'apps/acme/frontend',
-  name: 'app-acme-frontend'
+const options = {
+  workspaceProjectDir: __dirname
 };
-
-export default defineAppProjectViteConfig(__dirname, project);
+export default defineAppProjectViteConfig(options);
 "
 `;
 

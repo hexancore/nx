@@ -23,6 +23,7 @@ export async function presetGenerator(
   const templateContext = {
     tmpl: '',
     workspace: {
+      packageScope: `@${options.name}`,
       name: options.name,
       nxVersion
     }

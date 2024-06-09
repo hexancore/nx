@@ -23,11 +23,14 @@ describe('Library Generator: Frontend', () => {
     'tsconfig.json',
     'tsconfig.test.json',
     'tsconfig.build.json',
-    'vite.config.ts',
+    'vite.config.mts',
     '.storybook/main.ts',
     '.storybook/preview.ts',
     'tsconfig.storybook.json',
-    'src/vue-shims.d.ts'
+    'src/vue-shims.d.ts',
+    'src/Asset/Style/variables.scss',
+    'src/Component/Button/Button.vue',
+    'src/Component/Button/Button.stories.ts',
   ].map(f => `${projectRoot}/` + f);
 
   const expectedWorkspaceFilesToMatchSnapshots = [
@@ -44,11 +47,12 @@ describe('Library Generator: Frontend', () => {
   test('only file from list should exist', () => {
     const expected = [
       '.prettierrc',
-      `${projectRoot}/src/index.ts`,
+      `${projectRoot}/src/Asset/Image/logo.png`,
       `${projectRoot}/test/config.ts`,
       `${projectRoot}/test/unit/sample.test.ts`,
       `${projectRoot}/test/helper/.gitkeep`,
       `${projectRoot}/test/integration/.gitkeep`,
+      `${projectRoot}/src/Service/.gitkeep`,
       ...expectedWorkspaceFilesToMatchSnapshots
     ];
     exceptOnlyFilesFromListExistInWorkspace(tree, expected);

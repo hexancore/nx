@@ -2,10 +2,10 @@ import {
   Tree,
   writeJson
 } from '@nx/devkit';
-import type { ProjectMeta } from './ProjectMeta';
+import type { HcNxProjectMeta } from './HcNxProjectMeta';
 
 export interface ProjectPackageJsonGeneratorOptions {
-  project: ProjectMeta;
+  project: HcNxProjectMeta;
 }
 
 export class ProjectPackageJsonGenerator<Opts extends ProjectPackageJsonGeneratorOptions> {
@@ -23,7 +23,7 @@ export class ProjectPackageJsonGenerator<Opts extends ProjectPackageJsonGenerato
   public apply(tree: Tree): void {
     const packageJson = {
       name: this.options.project.importName,
-      type: "commonjs",
+      type: this.options.project.subtype === 'frontend' ? 'module' : 'commonjs',
       private: true,
       ...this.generateDeps(),
       ...this.generateExports()
@@ -38,8 +38,12 @@ export class ProjectPackageJsonGenerator<Opts extends ProjectPackageJsonGenerato
 
   private generateExports(): Record<string, any> {
     if (this.options.project.type === 'library') {
+      if (this.options.project.subtype === 'frontend' ) {
+        return {};
+      }
+
       return {
-        "main": this.options.project.subtype === 'frontend' ? "./src/index.mjs" : "./src/index.js",
+        "main": "./src/index.js",
         "types": "./src/index.d.ts",
       };
     }

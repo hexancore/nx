@@ -1,9 +1,0 @@
-import { defineAppProjectViteConfig } from "<%= project.relative.workspaceRoot %>/.workspace/vite/vite.preset";
-
-const project = {
-  workspaceRootRelative: '<%= project.relative.workspaceRoot %>',
-  root: '<%= project.root %>',
-  name: '<%= project.name %>'
-};
-
-export default defineAppProjectViteConfig(__dirname, project);

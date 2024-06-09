@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "moduleResolution": "Bundler",
+    "module": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "types": [
+      "vite/client",
+      "vitest",
+      "@intlify/unplugin-vue-i18n/messages"
+    ],
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "verbatimModuleSyntax": false,
+    "useDefineForClassFields": true,
+    "isolatedModules": true,
+    "noEmit": true
+  }
+}

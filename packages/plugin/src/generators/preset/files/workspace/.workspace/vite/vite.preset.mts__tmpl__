@@ -1,0 +1,21 @@
+import {
+  AppProjectViteConfigGenerator,
+  LibProjectViteConfigGenerator,
+  type AppProjectViteConfigGeneratorOptions,
+  type LibProjectViteConfigGeneratorOptions,
+} from '@hexancore/nx/vite';
+
+import { HcNxRuntimeHelper } from '@hexancore/nx';
+import { dirname } from 'path';
+
+const runtimeHelper = new HcNxRuntimeHelper(dirname(dirname(__dirname)));
+
+export function defineLibProjectViteConfig(options: LibProjectViteConfigGeneratorOptions) {
+  const generator = new LibProjectViteConfigGenerator(runtimeHelper);
+  return generator.create(options);
+}
+
+export function defineAppProjectViteConfig(options: AppProjectViteConfigGeneratorOptions) {
+  const generator = new AppProjectViteConfigGenerator(runtimeHelper);
+  return generator.create(options,);
+}

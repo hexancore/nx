@@ -1,0 +1,39 @@
+import type { Meta, StoryObj } from '@storybook/vue3';
+
+import Button from './Button.vue';
+import { h } from 'vue';
+
+const meta = {
+  title: 'Example/Button',
+  component: Button,
+
+  tags: ['autodocs'],
+  argTypes: {
+    size: { control: 'select', options: ['small', 'medium', 'large'] },
+    backgroundColor: { control: 'color' },
+    onClick: { action: 'clicked' },
+  },
+  args: { primary: false }, // default value
+} satisfies Meta<typeof Button>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+const iconImg = 'image/logo.png';
+
+export const Primary: Story = {
+  args: {
+    primary: true,
+    label: 'Hexancore',
+    icon: h('img',{src:iconImg,height:64}),
+    default:h('span',{style:{color:'yellow',padding:'16px'}},'Default Slot Content')
+  },
+};
+
+export const Secondary: Story = {
+  args: {
+    primary: false,
+    label: 'Hexancore',
+    icon: h('img',{src:iconImg,height:64}),
+    default:()=>'Default Slot Content as Text',
+  },
+};

@@ -1,3 +1,5 @@
 export * from './HcNxHelper';
 export * from './ProjectPackageJsonGenerator';
-export * from './ProjectMeta';
+export * from './HcNxProjectMeta';
+export * from './HcNxProjectHelper';
+export * from './HcNxRuntimeHelper';

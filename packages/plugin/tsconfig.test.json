@@ -1,15 +1,26 @@
 {
   "extends": "./tsconfig.json",
+  "moduleResolution": "Node",
+  "module": "ESNext",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": [
       "jest",
       "node"
-    ]
+    ],
+    "paths": {
+      "vite": [
+        "node_modules/vite/dist/node/index.js"
+      ]
+    }
   },
   "include": [
     "jest.config.ts",
     "test/**/*.ts",
+    "test/**/*.mts",
     "src/**/*.d.ts"
-, "src/generators/library/files/frontend/src/vue-shims.d.ts__tmpl__"  ]
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
