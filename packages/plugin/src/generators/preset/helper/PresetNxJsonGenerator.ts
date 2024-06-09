@@ -1,7 +1,10 @@
 import {
   Tree,
-  updateJson
+  updateJson,
+  type TargetConfiguration
 } from '@nx/devkit';
+
+export type ProjectTargetsConfiguration = Record<string, TargetConfiguration>;
 
 export class PresetNxJsonGenerator {
 
@@ -40,40 +43,80 @@ export class PresetNxJsonGenerator {
 
   private namedInputs(): Record<string, any> {
     return {
-      "default": [
+      default: [
         "{projectRoot}/**/*",
-        "!{projectRoot}/README.md",
         "sharedGlobals"
       ],
-      "sharedGlobals": [],
+      sharedGlobals: [],
       production: [
         "default",
         "!{projectRoot}/test/**/*",
-        "!{projectRoot}/.vite/**/*",
-        "!{projectRoot}/.storybook/**/*",
         "!{projectRoot}/jest.config.{js,ts,mjs,mts}",
         "!{projectRoot}/tsconfig.test.json",
-        "!{projectRoot}/.eslintrc.json"
+        "!{projectRoot}/.eslintrc.json",
+        "{workspaceRoot}/.workspace/vite/**/*"
+      ],
+      storybook: [
+        "production",
+        "{projectRoot}/**/*.stories.ts",
+        "{workspaceRoot}/.workspace/storybook/**/*",
       ]
     };
   }
 
-  private targetDefaults(): Record<string, any> {
+  private targetDefaults(): ProjectTargetsConfiguration {
+    return {
+      ...this.jsTargetsDefaults(),
+      ...this.eslintTargetsDefaults(),
+      ...this.jestTargetsDefaults(),
+      ...this.viteTargetsDefaults(),
+      ...this.storybookTargetsDefaults(),
+    };
+  }
+
+  private jsTargetsDefaults(): ProjectTargetsConfiguration {
     return {
       "@nx/js:tsc": {
+        cache: true,
         "inputs": ["production", "^production"],
         "outputs": ["{options.outputPath}"],
         "dependsOn": ["^build", "test"],
+        "options": {
+          "outputPath": "{workspaceRoot}/dist/{projectRoot}",
+          "tsConfig": "{projectRoot}/tsconfig.build.json",
+          "transformers": [
+            {
+              "name": "typescript-transform-paths/nx-transformer"
+            }
+          ]
+        }
+      }
+    };
+  }
+
+  private eslintTargetsDefaults(): ProjectTargetsConfiguration {
+    return {
+      "@nx/eslint:lint": {
+        "inputs": ["default", "{workspaceRoot}/.eslintrc.json", "{workspaceRoot}/.eslintignore"],
         "cache": true,
         "options": {
-          "outputPath": "dist/{projectRoot}",
-          "tsConfig": "{projectRoot}/tsconfig.build.json"
+          "lintFilePatterns": ["{projectRoot}/**/*.ts", "{projectRoot}/package.json"]
+        },
+        "configurations": {
+          "fix": {
+            "fix": true,
+            "cache": false
+          }
         }
       },
+    };
+  }
 
+  private jestTargetsDefaults(): ProjectTargetsConfiguration {
+    return {
       "@nx/jest:jest": {
         "cache": true,
-        "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+        "inputs": ["default", "{workspaceRoot}/.workspace/jest/**/*"],
         "options": {
           "jestConfig": "{projectRoot}/jest.config.ts",
           "runInBand": true,
@@ -95,83 +138,86 @@ export class PresetNxJsonGenerator {
           }
         }
       },
-      "@nx/eslint:lint": {
-        "inputs": ["default", "{workspaceRoot}/.eslintrc.json", "{workspaceRoot}/.eslintignore"],
-        "cache": true,
-        "options": {
-          "lintFilePatterns": ["{projectRoot}/**/*.ts", "{projectRoot}/package.json"]
-        },
-        "configurations": {
-          "fix": {
-            "fix": true,
-            "cache": false
-          }
-        }
-      },
-      ...this.viteTargetsDefaults(),
-      ...this.storybookTargetsDefaults(),
     };
   }
 
-  private viteTargetsDefaults(): Record<string, any> {
+  private viteTargetsDefaults(): ProjectTargetsConfiguration {
     return {
       "@nx/vite:build": {
+        cache: true,
         "inputs": ["production", "^production"],
-        "outputs": ["{options.outputPath}"],
-        "defaultConfiguration": "production",
-        "options": {
+        outputs: ["{options.outputPath}"],
+        defaultConfiguration: "production",
+        options: {
           "outputPath": "dist/{projectRoot}",
           "skipTypeCheck": true,
-          "configFile": "{projectRoot}/vite.config.ts",
+          "configFile": "{projectRoot}/vite.config.mts",
           "tsConfig": "{projectRoot}/tsconfig.build.json",
           "generatePackageJson": false
         },
-        "configurations": {
-          "development": {
+        configurations: {
+          development: {
             "mode": "development"
           },
-          "production": {
+          production: {
             "mode": "production"
           }
         }
       },
       "@nx/vite:preview-server": {
-        "defaultConfiguration": "development",
-        "options": {
+        defaultConfiguration: "development",
+        cache: false,
+        options: {
           "buildTarget": "build"
         },
-        "configurations": {
-          "development": {
-            "buildTarget": "build:development"
+        configurations: {
+          development: {
+            buildTarget: "build:development"
           },
-          "production": {
-            "buildTarget": "build:production"
+          production: {
+            buildTarget: "build:production"
+          }
+        }
+      },
+      "@nx/vite:dev-server": {
+        cache: false,
+        defaultConfiguration: "development",
+        options: {
+          buildTarget: "build"
+        },
+        configurations: {
+          development: {
+            buildTarget: "build:development"
+          },
+          production: {
+            buildTarget: "build:production"
           }
         }
       },
       "@nx/vite:test": {
-        "cache": true,
-        "inputs": ["default", "^default"],
-        "options": {
-          "configFile": "{projectRoot}/vite.config.ts",
-          "passWithNoTests": true,
-          "reportsDirectory": "../../../coverage/{projectRoot}"
+        cache: true,
+        inputs: ["default"],
+        options: {
+          configFile: "{projectRoot}/vite.config.mts",
+          passWithNoTests: true,
+          reportsDirectory: "{workspaceRoot}/coverage/{projectRoot}"
         },
-        "configurations": {
-          "watch": {
-            "watch": true
+        configurations: {
+          watch: {
+            watch: true
           }
         }
       },
     };
   }
 
-  private storybookTargetsDefaults(): Record<string, any> {
+  private storybookTargetsDefaults(): ProjectTargetsConfiguration {
     return {
       "@nx/storybook:storybook": {
+        "cache": false,
         "options": {
           "port": 4400,
-          "configDir": "libs/front/mao1/.storybook"
+          "configDir": "{projectRoot}/.storybook"
         },
         "configurations": {
           "ci": {
@@ -180,9 +226,11 @@ export class PresetNxJsonGenerator {
         }
       },
       "@nx/storybook:build": {
+        "inputs": ["storybook"],
+        "cache": true,
         "outputs": ["{options.outputDir}"],
         "options": {
-          "outputDir": "dist/storybook/{projectRoot}",
+          "outputDir": "{workspaceRoot}/dist/storybook/{projectRoot}",
           "configDir": "{projectRoot}/.storybook"
         },
         "configurations": {
@@ -201,7 +249,7 @@ export class PresetNxJsonGenerator {
         "executor": "@nx/web:file-server",
         "options": {
           "buildTarget": "storybook-build",
-          "staticFilePath": "dist/storybook/{projectRoot}",
+          "staticFilePath": "{workspaceRoot}/dist/storybook/{projectRoot}",
           "spa": true
         },
         "configurations": {

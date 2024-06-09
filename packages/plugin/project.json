@@ -1,7 +1,7 @@
 {
   "name": "plugin",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "{projectRoot}/src",
+  "sourceRoot": "packages/lib/src",
   "projectType": "library",
   "release": {
     "version": {
@@ -62,6 +62,7 @@
       }
     },
     "nx-release-publish": {
+      "cache": false,
       "options": {
         "registry": "http://localhost:4873/",
         "packageRoot": "dist/{projectRoot}"

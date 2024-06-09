@@ -1,30 +1,7 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "<%= project.relative.workspaceRoot %>/tsconfig.frontend.base.json",
   "compilerOptions": {
-    "allowJs": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "jsx": "preserve",
-    "jsxImportSource": "vue",
-    "resolveJsonModule": true,
-    "verbatimModuleSyntax": false,
-    "useDefineForClassFields": true,
-    "isolatedModules": true,
-    "types": ["vite/client", "vitest", "@intlify/unplugin-vue-i18n/messages"],
-    "noEmit": true,
-    "lib": ["ES2022", "DOM"],
-    "skipLibCheck": true,
-
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
     "paths": {
-    <%_ if (project.type === 'library') { _%>
-      "<%= project.importName %>": [
-        "<%= project.root %>/src/index.ts"
-      ],
-    <%_ } _%>
       "@": [
         "<%= project.root %>/src"
       ],

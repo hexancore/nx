@@ -1,9 +1,0 @@
-import { defineLibProjectViteConfig } from "<%= project.relative.dotWorkspace %>/vite/vite.preset";
-
-const project = {
-  workspaceRootRelative: '<%= project.relative.workspaceRoot %>',
-  root: '<%= project.root %>',
-  name: '<%= project.name %>'
-};
-
-export default defineLibProjectViteConfig(__dirname, project);

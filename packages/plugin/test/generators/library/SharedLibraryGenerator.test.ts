@@ -2,7 +2,7 @@ import { Tree } from '@nx/devkit';
 
 import { libraryGenerator } from '../../../src/generators/library/libraryGenerator';
 import { LibraryGeneratorSchema } from '../../../src/generators/library/schema';
-import { createEmptyNxTree, exceptOnlyFilesFromListExistInWorkspace, exceptWorkspaceFileMatchSnapshot } from '../../helper/functions';
+import { createEmptyNxTree, exceptOnlyFilesFromListExistInWorkspace, exceptWorkspaceFileMatchSnapshot, expectedFiles } from '../../helper/functions';
 
 describe('Library Generator: Shared', () => {
   let tree: Tree;
@@ -38,13 +38,17 @@ describe('Library Generator: Shared', () => {
   });
 
   test('only file from list should exist', () => {
+    const expectedProjectFiles = expectedFiles(`${projectRoot}/`, [
+      'src/index.ts',
+      'test/config.ts',
+      'test/unit/sample.test.ts',
+      'test/helper/.gitkeep',
+      'test/integration/.gitkeep',
+      'src/Service/.gitkeep'
+    ]);
     const expected = [
       '.prettierrc',
-      `${projectRoot}/src/index.ts`,
-      `${projectRoot}/test/config.ts`,
-      `${projectRoot}/test/unit/sample.test.ts`,
-      `${projectRoot}/test/helper/.gitkeep`,
-      `${projectRoot}/test/integration/.gitkeep`,
+      ...expectedProjectFiles,
       ...expectedWorkspaceFilesToMatchSnapshots
     ];
     exceptOnlyFilesFromListExistInWorkspace(tree, expected);

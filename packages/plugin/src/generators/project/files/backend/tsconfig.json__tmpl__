@@ -1,8 +1,6 @@
 {
   "extends": "<%= project.relative.workspaceRoot %>/tsconfig.base.json",
   "compilerOptions": {
-    "moduleResolution": "Node16",
-    "module": "Node16",
     "paths": {
     <%_ if (project.type === 'library') { _%>
       "<%= project.importName %>": [

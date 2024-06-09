@@ -47,7 +47,7 @@ exports[`Application Generator: Backend apps/acme/backend/project.json should ma
   "name": "app-acme-backend",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "sourceRoot": "{projectRoot}/src",
+  "sourceRoot": "apps/acme/backend/src",
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint"
@@ -60,13 +60,25 @@ exports[`Application Generator: Backend apps/acme/backend/project.json should ma
       "options": {
         "main": "{projectRoot}/src/main.ts"
       }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "runtimeArgs": [],
+        "buildTarget": "build",
+        "port": 19002
+      }
     }
   }
 }
 "
 `;
 
-exports[`Application Generator: Backend apps/acme/backend/src/main.ts should match snapshot 1`] = `"export const EXAMPLE = 1;"`;
+exports[`Application Generator: Backend apps/acme/backend/src/main.ts should match snapshot 1`] = `
+"console.log("Started");
+"
+`;
 
 exports[`Application Generator: Backend apps/acme/backend/tsconfig.build.json should match snapshot 1`] = `
 "{
@@ -85,8 +97,6 @@ exports[`Application Generator: Backend apps/acme/backend/tsconfig.json should m
 "{
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "moduleResolution": "Node16",
-    "module": "Node16",
     "paths": {
       "@": [
         "apps/acme/backend/src"

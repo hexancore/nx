@@ -5,8 +5,6 @@
 </template>
 
 <style lang="scss">
-@import '../../Asset/Style/font.scss';
-
 html,
 body {
   padding: 0;
@@ -22,11 +20,6 @@ body {
 
 .app {
   height: 100%;
-}
-
-a {
-  text-decoration: none;
-  color: unset;
 }
 
 #app,

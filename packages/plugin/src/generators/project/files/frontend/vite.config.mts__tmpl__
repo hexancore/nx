@@ -1,0 +1,10 @@
+import { define<%- project.type === 'library' ? 'Lib' : 'App' %>ProjectViteConfig } from "<%= project.relative.dotWorkspace %>/vite/vite.preset.mjs";
+
+const options = {
+  workspaceProjectDir: __dirname
+};
+<%_ if (project.type === 'library') { _%>
+export default defineLibProjectViteConfig(options);
+<%_ } else{ _%>
+export default defineAppProjectViteConfig(options);
+<%_ } _%>

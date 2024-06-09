@@ -6,6 +6,7 @@
   "include": [
     "src/**/*.stories.ts",
     "src/**/*.stories.tsx",
-    ".storybook/*.ts"
+    ".storybook/*.ts",
+    ".storybook/*.mts"
   ]
 }

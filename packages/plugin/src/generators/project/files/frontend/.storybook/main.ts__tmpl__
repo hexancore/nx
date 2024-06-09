@@ -1,3 +1,7 @@
-import {defineProjectStorybookConfig} from "<%= project.relative.dotWorkspace %>/storybook/main.preset";
+import { dirname } from "path";
+import { defineProjectStorybookConfig } from "../<%= project.relative.dotWorkspace %>/storybook/storybook.preset";
 
-export default defineProjectStorybookConfig('<%= project.root %>');
+export default defineProjectStorybookConfig({
+  workspaceProjectDir: dirname(__dirname),
+  staticDirs: [],
+});

@@ -21,7 +21,10 @@
             "checkObsoleteDependencies": true,
             "checkVersionMismatches": true,
             "ignoredFiles": [
-              "vite.config.ts"
+              "vite.config.mts",
+              "vite.config.ts",
+              ".storybook/main.ts",
+              ".storybook/preview.ts"
             ],
             "ignoredDependencies": [
               "ts-jest",
@@ -29,8 +32,11 @@
               "@vitejs/plugin-basic-ssl",
               "vite",
               "vue",
+              "vue-router",
               "@vitejs/plugin-vue",
-              "@rollup/plugin-node-resolve"
+              "@rollup/plugin-node-resolve",
+              "@storybook/vue3",
+              "@hexancore/nx"
             ]
           }
         ]

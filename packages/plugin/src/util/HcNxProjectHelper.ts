@@ -9,7 +9,7 @@ import type { ApplicationType } from '../generators/application/ApplicationType'
 import type { LibraryType } from '../generators/library/LibraryType';
 import type { HcNxHelper } from './HcNxHelper';
 import { HcNxProjectTargetHelper } from './HcNxProjectTargetHelper';
-import { ProjectMeta, type ApplicationProjectMeta, type LibraryProjectMeta } from './ProjectMeta';
+import { HcNxProjectMeta, type ApplicationProjectMeta, type HcNxProjectDirectoryMeta, type LibraryProjectMeta, type ProjectSubtype } from './HcNxProjectMeta';
 import { ProjectPackageJsonGenerator } from './ProjectPackageJsonGenerator';
 
 export class HcNxProjectHelper {
@@ -25,7 +25,7 @@ export class HcNxProjectHelper {
   }
 
   public addApplication(directory: string, type: ApplicationType): ApplicationProjectMeta {
-    const project = this.createProjectMeta<ApplicationType>(directory, true, type);
+    const project = HcNxProjectHelper.createProjectMeta<ApplicationType>(directory, type, this.helper.workspacePackageScope, true);
     this.addProjectConfiguration(project);
     if (type === 'backend') {
       ProjectPackageJsonGenerator.run(this.tree, { project });
@@ -34,27 +34,42 @@ export class HcNxProjectHelper {
   }
 
   public addLibrary(directory: string, type: LibraryType): LibraryProjectMeta {
-    const project = this.createProjectMeta<LibraryType>(directory, false, type);
+    const project = HcNxProjectHelper.createProjectMeta<LibraryType>(directory, type, this.helper.workspacePackageScope, false);
     this.addProjectConfiguration(project);
     this.appendLibToWorkspaceTsPaths(project);
     ProjectPackageJsonGenerator.run(this.tree, { project });
     return project;
   }
 
-  private createProjectMeta<T extends ApplicationType | LibraryType>(directory: string, isApp: boolean, type: T): ProjectMeta<T> {
-    const name = HcNxProjectHelper.getProjectNameFromDirectory(directory, isApp);
-    const projectRoot = HcNxProjectHelper.getProjectRoot(directory, isApp);
-    const relativeWorkspaceRoot = '../'.repeat(projectRoot.split('/').length).slice(0, -1);
+  public static createProjectMeta<T extends ProjectSubtype>(
+    directory: string,
+    subtype: T,
+    workspacePackageScope: string,
+    isApp: boolean,
+  ): HcNxProjectMeta<T> {
+    let projectDirectoryMeta: HcNxProjectDirectoryMeta;
+
+    if (path.isAbsolute(directory)) {
+      projectDirectoryMeta = this.getProjectDirectoryMetaFromAbsolute(directory);
+    } else {
+      const projectRoot = HcNxProjectHelper.getProjectRoot(directory, isApp);
+      const relativeWorkspaceRoot = '../'.repeat(projectRoot.split('/').length).slice(0, -1);
+      projectDirectoryMeta = {
+        name: HcNxProjectHelper.getProjectNameFromDirectory(directory, isApp),
+        root: HcNxProjectHelper.getProjectRoot(directory, isApp),
+        type: isApp ? 'application' : 'library',
+        isApp,
+        relative: {
+          workspaceRoot: relativeWorkspaceRoot,
+          dotWorkspace: relativeWorkspaceRoot + '/.workspace',
+        },
+      };
+    }
+
     return {
-      name,
-      root: projectRoot,
-      relative: {
-        workspaceRoot: relativeWorkspaceRoot,
-        dotWorkspace: relativeWorkspaceRoot + '/.workspace',
-      },
-      importName: this.helper.workspacePackageNamespace + '/' + name,
-      type: isApp ? 'application' : 'library',
-      subtype: type
+      ...projectDirectoryMeta,
+      importName: workspacePackageScope + '/' + projectDirectoryMeta.name,
+      subtype: subtype
     };
   }
 
@@ -68,7 +83,37 @@ export class HcNxProjectHelper {
     return `${prefix}/${directory}`;
   }
 
-  public generateFiles<T extends Record<string, any>>(project: ProjectMeta<any>, srcDir: string, target: string, context?: T) {
+  public static getProjectDirectoryMetaFromAbsolute(dir: string): HcNxProjectDirectoryMeta {
+    dir = path.normalize(dir);
+    const dirParts = dir.replaceAll('\\', '/').split('/');
+    let isApp = false;
+    const projectDirectory: string[] = [];
+    for (let i = dirParts.length - 1; i >= 0; i--) {
+      if (dirParts[i] === 'apps' || dirParts[i] === 'libs') {
+        isApp = dirParts[i] === 'apps';
+        const directory = projectDirectory.join('/');
+        const name = HcNxProjectHelper.getProjectNameFromDirectory(directory, isApp);
+        const projectRoot = HcNxProjectHelper.getProjectRoot(directory, isApp);
+        const relativeWorkspaceRoot = '../'.repeat(projectRoot.split('/').length).slice(0, -1);
+        return {
+          name,
+          root: projectRoot,
+          type: isApp ? 'application' : 'library',
+          isApp,
+          relative: {
+            workspaceRoot: relativeWorkspaceRoot,
+            dotWorkspace: relativeWorkspaceRoot + '/.workspace',
+          },
+        };
+      }
+      projectDirectory.push(dirParts[i]);
+
+    }
+
+    throw new Error(`Invalid project dir: ${dir}`);
+  }
+
+  public generateFiles<T extends Record<string, any>>(project: HcNxProjectMeta<any>, srcDir: string, target: string, context?: T) {
     const templateContext = {
       tmpl: '',
       project: project,
@@ -82,16 +127,16 @@ export class HcNxProjectHelper {
     return path.join(path.dirname(__dirname), 'generators/project/files', subpath);
   }
 
-  private addProjectConfiguration(project: ProjectMeta): void {
+  private addProjectConfiguration(project: HcNxProjectMeta): void {
     addProjectConfiguration(this.tree, project.name, {
       root: project.root,
       projectType: project.type,
-      sourceRoot: '{projectRoot}/src',
+      sourceRoot: `${project.root}/src`,
       targets: this.targetHelper.targets(project),
     });
   }
 
-  protected appendLibToWorkspaceTsPaths(project: ProjectMeta) {
+  protected appendLibToWorkspaceTsPaths(project: HcNxProjectMeta) {
     updateJson(this.tree, 'tsconfig.base.json', (v) => {
       v.compilerOptions.paths = v.paths ?? {};
       v.compilerOptions.paths[project.importName] = [`${project.root}/src/index.ts`];

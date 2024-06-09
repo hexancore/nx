@@ -1,6 +1,5 @@
 import { existsSync } from "fs";
 import { execNx, getTestWorkspaceRoot } from "./functions";
-
 export default () => {
   if (global.stopLocalRegistry) {
     global.stopLocalRegistry();
@@ -8,7 +7,7 @@ export default () => {
 
   const workspaceRoot = getTestWorkspaceRoot();
   if (existsSync(workspaceRoot)) {
-    execNx(workspaceRoot, 'reset');
+    execNx(workspaceRoot, 'reset', false);
   }
 };
 

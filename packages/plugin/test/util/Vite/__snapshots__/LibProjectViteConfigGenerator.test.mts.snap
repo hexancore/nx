@@ -1,0 +1,117 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Function should generate with mode: development 1`] = `
+{
+  "build": {
+    "commonjsOptions": {
+      "transformMixedEsModules": true,
+    },
+    "cssCodeSplit": true,
+    "emptyOutDir": true,
+    "lib": {
+      "entry": "src/index.ts",
+      "fileName": "index",
+      "formats": [
+        "es",
+      ],
+      "name": "acme-some",
+    },
+    "outDir": "../../dist/libs/acme-some",
+    "reportCompressedSize": true,
+    "rollupOptions": {
+      "external": [
+        "vue",
+      ],
+      "input": {},
+      "output": {
+        "assetFileNames": [Function],
+        "chunkFileNames": [Function],
+        "entryFileNames": [Function],
+        "format": "esm",
+        "globals": {
+          "vue": "Vue",
+        },
+        "manualChunks": [Function],
+        "paths": undefined,
+        "preserveModules": false,
+      },
+    },
+    "target": "modules",
+  },
+  "cacheDir": "../../tmp/vite/acme-some",
+  "plugins": [],
+  "root": "/root/acme-work/libs/acme-some",
+  "test": {
+    "coverage": {
+      "provider": "v8",
+      "reportsDirectory": "../../tmp/coverage/acme-some",
+    },
+    "environment": "jsdom",
+    "globals": true,
+    "include": [
+      "test/**/*.test.{ts,mts,cts,tsx}",
+    ],
+    "reporters": [
+      "default",
+    ],
+  },
+}
+`;
+
+exports[`Function should generate with mode: production 1`] = `
+{
+  "build": {
+    "commonjsOptions": {
+      "transformMixedEsModules": true,
+    },
+    "cssCodeSplit": true,
+    "emptyOutDir": true,
+    "lib": {
+      "entry": "src/index.ts",
+      "fileName": "index",
+      "formats": [
+        "es",
+      ],
+      "name": "acme-some",
+    },
+    "outDir": "../../dist/libs/acme-some",
+    "reportCompressedSize": true,
+    "rollupOptions": {
+      "external": [
+        "vue",
+      ],
+      "input": {},
+      "output": {
+        "assetFileNames": [Function],
+        "chunkFileNames": [Function],
+        "entryFileNames": [Function],
+        "format": "esm",
+        "globals": {
+          "vue": "Vue",
+        },
+        "manualChunks": [Function],
+        "paths": undefined,
+        "preserveModules": false,
+      },
+    },
+    "target": "modules",
+  },
+  "cacheDir": "../../tmp/vite/acme-some",
+  "plugins": [],
+  "root": "/root/acme-work/libs/acme-some",
+  "test": {
+    "coverage": {
+      "provider": "v8",
+      "reportsDirectory": "../../tmp/coverage/acme-some",
+    },
+    "environment": "jsdom",
+    "globals": true,
+    "include": [
+      "test/**/*.test.{ts,mts,cts,tsx}",
+    ],
+    "reporters": [
+      "default",
+    ],
+  },
+}
+`;

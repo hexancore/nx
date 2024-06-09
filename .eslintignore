@@ -1,1 +1,7 @@
 node_modules
+dist
+.verdaccio
+.nx
+.husky
+coverage
+tmp

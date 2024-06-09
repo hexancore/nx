@@ -47,7 +47,7 @@ exports[`Library Generator: Backend libs/acme/backend/project.json should match 
   "name": "acme-backend",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
-  "sourceRoot": "{projectRoot}/src",
+  "sourceRoot": "libs/acme/backend/src",
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint"
@@ -83,8 +83,6 @@ exports[`Library Generator: Backend libs/acme/backend/tsconfig.json should match
 "{
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "moduleResolution": "Node16",
-    "module": "Node16",
     "paths": {
       "@testcompany/acme-backend": [
         "libs/acme/backend/src/index.ts"
