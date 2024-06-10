@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2024-06-10
+
+### Added
+
+- added serve target to backend and frontend application generator.
+- added `unplugin-vue-components` vite plugin - auto-importing vue components.
+- added automatic frontend application libs resolve(in dev mode library src code is used - hmr works perfect !).
+- added better vite project configuration controlling options.
+- added tsconfig.frontend.base.json used by frontend application and libraries.
+
+### Changed
+
+- reworked preset workspace structure(moved more code to plugin and simplified generated per project).
+- reworked vite build configuration.
+- simplified example generated source code in frontend application and library.
+
+### Updated
+
+- bumps deps(and Nx 19.2.2).
+
 ## [0.2.0] - 2024-05-31
 
 ### Added
@@ -37,7 +57,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Inital release.
 
-[unreleased] https://github.com/hexancore/nx/compare/0.2.0...HEAD   
+[unreleased] https://github.com/hexancore/nx/compare/0.3.0...HEAD
+[0.3.0] https://github.com/hexancore/nx/compare/0.2.0...0.3.0     
 [0.2.0] https://github.com/hexancore/nx/compare/0.1.1...0.2.0   
 [0.1.1] https://github.com/hexancore/nx/compare/0.1.0...0.1.1   
 [0.1.0] https://github.com/hexancore/nx/releases/tag/0.1.0   
