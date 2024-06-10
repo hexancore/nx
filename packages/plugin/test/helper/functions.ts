@@ -1,7 +1,6 @@
 import { writeJson, type Tree } from "@nx/devkit";
 import { createTreeWithEmptyWorkspace } from "@nx/devkit/testing";
 import { HcNxRuntimeHelper } from "../../src/util/HcNxRuntimeHelper";
-import type { GlobOptions } from "glob";
 
 export function createEmptyNxTree(): Tree {
   const tree = createTreeWithEmptyWorkspace();
