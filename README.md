@@ -6,7 +6,6 @@
 <p align="center"><i>Full-Stack TypeScript Framework for building epic <b>HexArch</b> designed applications.</i></p>
 <h2 align="center">Package: Nx</h2>
 <p align="center">
-  <img alt="Build" src="https://img.shields.io/github/actions/workflow/status/hexancore/nx/publish.yml">
   <a href="https://www.npmjs.com/package/@hexancore/nx"><img src="https://img.shields.io/npm/v/@hexancore/nx.svg" alt="NPM Version" /></a>
   <a href="https://www.npmjs.com/package/@hexancore/nx"><img src="https://img.shields.io/npm/dm/@hexancore/nx.svg" alt="NPM Downloads" /></a>
 </p>
