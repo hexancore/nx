@@ -30,7 +30,7 @@ export class PresetPackageJsonGenerator {
 
       o.scripts['prepare'] = "node .husky/install.mjs";
       o.scripts['precommit'] = "nx run-many --targets=lint,test,build";
-      o.scripts['ci'] = "nx run-many --targets=lint,test,build,e2e --configuration=ci";
+      o.scripts['ci'] = "nx run-many --targets=lint,test,build --configuration=ci";
       return o;
     });
   }
@@ -42,20 +42,68 @@ export class PresetPackageJsonGenerator {
     addDependenciesToPackageJson(tree, deps, devDeps);
   }
 
-  private deps(): Record<string, string> {
-    const hexancore = {
-      '@hexancore/core': '0.14.*',
-      '@hexancore/common': '0.13.*',
-      '@hexancore/cloud': '0.1.*',
-      '@hexancore/auth': '0.3.*',
-      '@hexancore/typeorm': '0.14.*',
-    };
-
+  private deps() {
     return {
-      ...hexancore,
-      'tslib': '2.6.2',
-      'fs-extra': '^11.2.0',
-      'reflect-metadata': '^0.1.13',
+      ...this.hexancoreDeps(),
+      ...this.coreNestjsDeps(),
+      ...this.depsEssentials(),
+    };
+  }
+
+  private depsEssentials() {
+    return {
+      "tslib": "2.6.3",
+      "fs-extra": "^11.2.0",
+      "glob": "^10.4.1",
+      "reflect-metadata": "^0.1.13",
+      "rxjs": "^7.8.0",
+      "axios": "^1.7.2",
+    };
+  }
+
+  private hexancoreDeps() {
+    return {
+      '@hexancore/core': '0.16.*',
+      '@hexancore/common': '0.15.*',
+      ...this.hexancoreCloudDeps(),
+      ...this.hexancoreAuthDeps(),
+      ...this.hexancoreTypeormDeps(),
+    };
+  }
+
+  private hexancoreTypeormDeps() {
+    return {
+      "@hexancore/typeorm": "0.16.*",
+      "pg": "^8.12.0",
+      "typeorm": "^0.3.20",
+    };
+  }
+
+  private hexancoreAuthDeps() {
+    return {
+      "@hexancore/auth": "0.5.*",
+      "oidc-provider": "^8.4.6",
+      "openid-client": "^5.6.5",
+    };
+  }
+
+  private hexancoreCloudDeps() {
+    return {
+      "@hexancore/cloud": "0.3.*",
+      "ioredis": "^5.3.2"
+    };
+  }
+
+  private coreNestjsDeps(): Record<string, string> {
+    const nestCommonPackageVersion = "^10.3.9";
+    return {
+      "@nestjs/common": nestCommonPackageVersion,
+      "@nestjs/core": nestCommonPackageVersion,
+      "@nestjs/platform-fastify": nestCommonPackageVersion,
+      "@nestjs/config": "^3.0.0",
+      "@nestjs/cqrs": "^10.2.5",
+      "@nestjs/swagger": "^7.1.8",
+      "nestjs-cls": "^4.3.0"
     };
   }
 
@@ -149,18 +197,20 @@ export class PresetPackageJsonGenerator {
       "unplugin-vue-components": "^0.27.0",
     };
 
+    const vitestVersion = "1.6.*";
     const vitest = {
-      "@vitest/coverage-v8": "1.6.*",
-      "@vitest/ui": "1.6.*",
-      "vitest": "1.6.*",
+      "@vitest/coverage-v8": vitestVersion,
+      "@vitest/ui": vitestVersion,
+      "vitest": vitestVersion,
     };
 
+    const babelVersion = "^7.24.4";
     return {
       "vite": "^5.2.10",
       "rollup": "^4.17.0",
-      "@babel/core": "^7.24.4",
-      "@babel/plugin-transform-modules-commonjs": "^7.24.1",
-      "@babel/preset-env": "^7.24.4",
+      "@babel/core": babelVersion,
+      "@babel/plugin-transform-modules-commonjs": babelVersion,
+      "@babel/preset-env": babelVersion,
       ...vitePlugins,
       ...vitest
     };
@@ -214,11 +264,10 @@ export class PresetPackageJsonGenerator {
       "typescript-transform-paths": "^3.4.7",
       "esbuild": "^0.19.12",
       "axios-mock-adapter": "^1.22.0",
-      "@types/node": "20.12.12",
+      "@types/node": "^20.12.12",
       "@nestjs/testing": "^10.3.8",
       "husky": "^9.0.11",
-      "prettier": "3.2.5",
-      "glob": "^10.4.1"
+      "prettier": "3.2.5"
     };
   }
 }

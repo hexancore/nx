@@ -10,7 +10,6 @@
   <a href="https://www.npmjs.com/package/@hexancore/nx"><img src="https://img.shields.io/npm/dm/@hexancore/nx.svg" alt="NPM Downloads" /></a>
 </p>
 
-
 ## Description
 
 This package includes plugin for Nx tailored for the Hexancore framework.

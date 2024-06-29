@@ -1,4 +1,4 @@
-import '@hexancore/common/testutil';
+import '@hexancore/common/testing/jest';
 
 // Catch all unhandled Promise rejections
 process.on('unhandledRejection', (err) => {
