@@ -39,11 +39,6 @@
             "output": "."
           },
           {
-            "input": "{workspaceRoot}",
-            "glob": "CHANGELOG.md",
-            "output": "."
-          },
-          {
             "input": "{projectRoot}/src",
             "glob": "**/*.d.ts",
             "output": "./src"

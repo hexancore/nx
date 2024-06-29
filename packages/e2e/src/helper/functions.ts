@@ -14,10 +14,8 @@ export function getTestWorkspaceRoot(): string {
 
 export function createTestWorkspace(name = 'test-workspace'): string {
   process.env['HUSKY'] = '0';
-
   const cwd = process.cwd();
   const workspaceRoot = join(cwd, 'tmp', name);
-
   if (existsSync(workspaceRoot)) {
     execNx(workspaceRoot, 'reset', false);
     rmSync(workspaceRoot, {
@@ -31,8 +29,6 @@ export function createTestWorkspace(name = 'test-workspace'): string {
   mkdirSync(dirname(workspaceRoot), {
     recursive: true,
   });
-
-  process.env['PNPM_HOME'] = join(cwd, 'tmp', 'pnpm-store');
 
   const createWorkspaceScript = join(cwd, 'tools', 'scripts', 'create-workspace.mjs');
   try {

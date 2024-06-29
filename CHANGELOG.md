@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- bump Nx to `19.3.1`
+- bump hexancore/common in preset to `0.15.*`
+- bump hexancore/core in preset to `0.16.*`
+- bump hexancore/auth in preset to `0.5.*`
+- bump hexancore/cloud in preset to `0.3.*`
+- bump hexancore/typeorm in preset to `0.16.*`
+
+### Fixed
+
+- fixed `.nx` in preset .gitingore
+
 ## [0.3.0] - 2024-06-10
 
 ### Added
@@ -58,7 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inital release.
 
 [unreleased] https://github.com/hexancore/nx/compare/0.3.0...HEAD
-[0.3.0] https://github.com/hexancore/nx/compare/0.2.0...0.3.0     
-[0.2.0] https://github.com/hexancore/nx/compare/0.1.1...0.2.0   
-[0.1.1] https://github.com/hexancore/nx/compare/0.1.0...0.1.1   
-[0.1.0] https://github.com/hexancore/nx/releases/tag/0.1.0   
+[0.3.0] https://github.com/hexancore/nx/compare/0.2.0...0.3.0  
+[0.2.0] https://github.com/hexancore/nx/compare/0.1.1...0.2.0  
+[0.1.1] https://github.com/hexancore/nx/compare/0.1.0...0.1.1  
+[0.1.0] https://github.com/hexancore/nx/releases/tag/0.1.0
