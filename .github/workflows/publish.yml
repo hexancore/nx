@@ -2,7 +2,8 @@ name: Publish
 env:
   HUSKY: 0
 on:
-  workflow_dispatch:
+  release:
+    types: [published]
 
 jobs:
   check:
